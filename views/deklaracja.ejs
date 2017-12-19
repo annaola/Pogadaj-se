@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Wypełnij deklarację</title>
+</head>
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 30%;
+    }
+
+    input.number {
+        width: 50px;
+    }
+
+    tr,
+    th {
+        border: 1px solid #5b5b5b;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #afafaf;
+    }
+
+    tr:nth-child(odd)>th:nth-child(even) {
+        background-color: #858585;
+    }
+
+    tr:nth-child(even)>th:nth-child(odd) {
+        background-color: #d6d6d6;
+    }
+</style>
+
+<body>
+    <form method="POST" >
+        <div>
+            <h3>Imię i nazwisko:</h3>
+            <br>
+            <input type='text' name='name' pattern="[A-Za-zęóąśłżźćńĘÓĄŚŁŻŹĆŃ ]*" required/>
+        </div>
+        <div>
+            <h3>Przedmiot:</h3>
+            <br>
+            <input type='text' name='lecture' required/>
+        </div>
+        <div>
+            <h3>Data:</h3>
+            <br>
+            <input type='date' name='date' required/>
+        </div>
+        <div>
+            <h3>Zadania:</h3>
+            <table>
+                <tr>
+                    <th>
+                        <p>1</p>
+                    </th>
+                    <th>
+                        <p>2</p>
+                    </th>
+                    <th>
+                        <p>3</p>
+                    </th>
+                    <th>
+                        <p>4</p>
+                    </th>
+                    <th>
+                        <p>5</p>
+                    </th>
+                    <th>
+                        <p>6</p>
+                    </th>
+                    <th>
+                        <p>7</p>
+                    </th>
+                    <th>
+                        <p>8</p>
+                    </th>
+                    <th>
+                        <p>9</p>
+                    </th>
+                    <th>
+                        <p>10</p>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <input type="number" name="zad1" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad2" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad3" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad4" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad5" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad6" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad7" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad8" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad9" id="" min="0" class="number">
+                    </th>
+                    <th>
+                        <input type="number" name="zad10" id="" min="0" class="number">
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <div>
+            <button>Drukuj</button>
+        </div>
+    </form>
+</body>
+
+</html>

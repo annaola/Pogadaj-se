@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Drukuj</title>
+</head>
+<style type="text/css" media="screen">
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 30%;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid rgb(0, 0, 0);
+        border-collapse: collapse;
+    }
+
+    tr,
+    th {
+        /* border: 1px solid #5b5b5b; */
+        text-align: left;
+        /* padding: 8px; */
+    }
+    td {
+        width: 5%;
+    }
+
+    tr:nth-child(even) {
+        background-color: #afafaf;
+    }
+
+    tr:nth-child(odd)>th:nth-child(even) {
+        background-color: #858585;
+    }
+
+    tr:nth-child(even)>th:nth-child(odd) {
+        background-color: #d6d6d6;
+    }
+</style>
+<style type="text/css" media="print">
+    h1 {
+        color: red;
+        size: 300px;
+    }
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    tr,
+    th {
+        /* border: 1px solid #5b5b5b; */
+        text-align: left;
+        /* padding: 8px; */
+        background-color: black;
+    }
+    td {
+        width: 5%;
+    }
+
+    tr:nth-child(even) {
+        background-color: #afafaf;
+    }
+
+    tr:nth-child(odd)>th:nth-child(even) {
+        background-color: #858585;
+    }
+
+    tr:nth-child(even)>th:nth-child(odd) {
+        background-color: #d6d6d6;
+    }
+    button {
+        visibility: hidden;
+    }
+</style>
+
+<body>
+
+    <table>
+        <tr>
+            <th colspan="3">
+                <%= name %>
+            </th>
+            <th colspan="5">
+                <%= lecture %>
+            </th>
+            <th colspan="2">
+                <%= date %>
+            </th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+            <td>6</td>
+            <td>7</td>
+            <td>8</td>
+            <td>9</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <td>
+                <%= punkty[1] %>
+            </td>
+            <td>
+                <%= punkty[2] %>
+            </td>
+            <td>
+                <%= punkty[3] %>
+            </td>
+            <td>
+                <%= punkty[4] %>
+            </td>
+            <td>
+                <%= punkty[5] %>
+            </td>
+            <td>
+                <%= punkty[6] %>
+            </td>
+            <td>
+                <%= punkty[7] %>
+            </td>
+            <td>
+                <%= punkty[8] %>
+            </td>
+            <td>
+                <%= punkty[9] %>
+            </td>
+            <td>
+                <%= punkty[10] %>
+            </td>
+        </tr>
+    </table>
+    <button onclick="javascript:window.print()">Drukuj</button>
+</body>
+
+</html>
