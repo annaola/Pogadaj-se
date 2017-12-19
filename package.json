@@ -17,5 +17,17 @@
   "bugs": {
     "url": "https://github.com/iCarrrot/Pogadaj-se/issues"
   },
-  "homepage": "https://github.com/iCarrrot/Pogadaj-se#readme"
+  "homepage": "https://github.com/iCarrrot/Pogadaj-se#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "multer": "^1.3.0",
+    "session-file-store": "^1.2.0",
+    "url": "^0.11.0"
+  }
 }
