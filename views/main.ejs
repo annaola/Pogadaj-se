@@ -1,5 +1,11 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Strona główna</title>
+</head>
 <body>
     <input type="button" onclick="location.href='/deklaracja';" value="Deklaracja" /> <br><br>
     <input type="button" onclick="location.href='/plik';" value="Pobierz plik" />
@@ -7,12 +13,11 @@
     <input type="button" onclick="location.href='/radio';" value="Radio" /><br><br>
     <input type="button" onclick="location.href='/cookie';" value="Ciastka" />
     <input type="button" onclick="location.href='/clear';" value="Wyczyść ciastka" /><br><br>
-    <%if (https==0) { %>
+    <!-- <%if (https==0) { %>
     <input type="button" onclick="location.href='https://127.0.0.1:3001/';" value="Zamiana na https" />
     <% } %>
     <%if (http==0) { %>
         <input type="button" onclick="location.href='http://127.0.0.1:3000/';" value="Zamiana na http" />
-    <% } %>
+    <% } %> -->
 </body>
-
 </html>
