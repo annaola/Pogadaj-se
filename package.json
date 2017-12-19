@@ -2,10 +2,13 @@
   "name": "Pogadaj-se",
   "version": "1.0.0",
   "description": "Projekt na WEPPO",
-  "main": "index.js",
+  "engines": {
+    "node": "8.8.1"
+  },
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "node server.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
