@@ -10,7 +10,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
-
+var socket = require('socket.io');
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -18,6 +18,8 @@ app.set('views', './views');
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+var server = http.createServer(app);
+var io = socket(server);
 // nested sessios
 app.use('/sessions', session({
     secret: 'keyboard cat',
@@ -32,6 +34,9 @@ app.get('/', (req, res) => {
     res.render('main', model);
 });
 
+app.get('/chat', (req, res) => {
+    res.render('chat');
+});
 
 app.get('/plik', (req, res) => {
 
@@ -151,88 +156,24 @@ app.use((req, res, next) => {
     res.render('404.ejs', { url: req.url });
 });
 
-// //https:
-// const options = {
-//     pfx: fs.readFileSync('/home/michal/WEPPO/l5/iCarrot.pfx'),
-//     passphrase: ''
-// };
-
-// var app1 = express();
-// app1.set('view engine', 'ejs');
-// app1.set('views', './views');
-
-// // tu dodajemy middleware
-// app1.get('/', (req, res) => {
-//     var model = { https: 1, http: 0 };
-//     res.render('main', model);
-// });
-
-// app1.get('/plik', (req, res) => {
-
-//     // proszę zaremować i odremować tę linijkę i porównać wynik
-//     res.setHeader('Content-disposition', 'attachment; filename=test.html');
-
-//     res.write('123');
-//     res.end();
-// });
-
-
-// app1.use(express.urlencoded({ extended: true }));
-
-// app1.get('/deklaracja', (req, res) => {
-//     res.render('deklaracja');
-// });
-
-// app1.post('/deklaracja', (req, res) => {
-//     var name = req.body.name;
-//     var lecture = req.body.lecture;
-//     var date = req.body.date;
-//     var punkty = {
-//         1: req.body.zad1,
-//         2: req.body.zad2,
-//         3: req.body.zad3,
-//         4: req.body.zad4,
-//         5: req.body.zad5,
-//         6: req.body.zad6,
-//         7: req.body.zad7,
-//         8: req.body.zad8,
-//         9: req.body.zad9,
-//         10: req.body.zad10,
-//     };
-//     for (const p in punkty) {
-//         if (punkty[p] == '') {
-//             punkty[p] = 0;
-
-//         }
-//     }
-
-//     res.redirect(
-//         url.format({
-//             pathname: "print",
-//             query: {
-//                 name: name,
-//                 lecture: lecture,
-//                 punkty: utils.intDictEncode(punkty),
-//                 date: date,
-//             }
-//         }));
-// });
-
-// app1.get('/print', (req, res) => {
-//     var punkty = utils.intDictDecode(req.query.punkty)
-//     var model = req.query;
-//     model.punkty = punkty;
-//     console.log(punkty)
-//     res.render('print', model);
-// });
-
-// app1.use((req, res, next) => {
-//     res.render('404.ejs', { url: req.url });
-// });
-
 
 
 // tu uruchamiamy serwer
-var server = http.createServer(app).listen( process.env.PORT || 3000 );
-// var server = https.createServer(options, app1).listen(3001);
+server.listen( process.env.PORT || 3000 );
+
 console.log('serwer started');
+
+io.on('connection', function(socket) {
+    console.log('client connected:' + socket.id);
+    socket.on('chat message', function(data) {
+        io.emit('chat message', data); // do wszystkich
+        //socket.emit('chat message', data); tylko do połączonego
+    })
+});
+
+setInterval( function() {
+    var date = new Date().toString();
+    io.emit( 'message', date.toString() );
+}, 1000 );
+
+console.log( 'server listens' );
