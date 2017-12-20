@@ -167,7 +167,7 @@ io.on('connection', function(socket) {
     console.log('client connected:' + socket.id);
     socket.on('chat message', function(data) {
         io.emit('chat message', data); // do wszystkich
-        //socket.emit('chat message', data); tylko do połączonego
+        // socket.emit('chat message', data); //tylko do połączonego
     })
 });
 
@@ -175,5 +175,3 @@ setInterval( function() {
     var date = new Date().toString();
     io.emit( 'message', date.toString() );
 }, 1000 );
-
-console.log( 'server listens' );
