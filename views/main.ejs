@@ -7,7 +7,7 @@
     <title>Pogadaj se!</title>
 </head>
 <body>
-    <h1>Witaj na Pogadaj se!</h1>
+    <h1>Witaj <%= email %> na Pogadaj se! </h1>
     <h2>Na razie strona jest w budowie, ale możesz wypróbować super ficzery:</h2>
     <input type="button" onclick="location.href='/chat';" value="Chat" /> <br><br>
     <input type="button" onclick="location.href='/deklaracja';" value="Deklaracja" /> <br><br>
@@ -16,11 +16,7 @@
     <input type="button" onclick="location.href='/radio';" value="Radio" /><br><br>
     <input type="button" onclick="location.href='/cookie';" value="Ciastka" />
     <input type="button" onclick="location.href='/clear';" value="Wyczyść ciastka" /><br><br>
-    <!-- <%if (https==0) { %>
-    <input type="button" onclick="location.href='https://127.0.0.1:3001/';" value="Zamiana na https" />
-    <% } %>
-    <%if (http==0) { %>
-        <input type="button" onclick="location.href='http://127.0.0.1:3000/';" value="Zamiana na http" />
-    <% } %> -->
+
+    <button onclick="location.href='/logout';">Wyloguj</button>
 </body>
 </html>

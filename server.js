@@ -25,13 +25,13 @@ var sess;
 var server = http.createServer(app);
 var io = socket(server);
 // nested sessios
-// app.use('/sessions', session({
-//     secret: 'keyboard cat',
-//     store: new FileStore,
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { maxAge: 1000 * 60 } //60 sec session
-// }))
+app.use('/sessions', session({
+    secret: 'keyboard cat',
+    store: new FileStore,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 1000 * 60 } //60 sec session
+}))
 
 app.get('/', (req, res) => {
 	sess=req.session;
@@ -52,12 +52,11 @@ app.post('/login',function(req,res){
 
 app.get('/main', (req,res)=> {
 	sess=req.session;
+	
 	if(sess.email)	
 	{
-		res.write('<h1>Hello '+sess.email+'</h1><br>');
-		var model = { https: 0, http: 1 };
-		//res.render('main', model);
-		res.end('<a href='+'/logout'+'>Logout</a>');
+		model={email: sess.email}
+		res.render('main', model);
 	}
 	else
 	{
