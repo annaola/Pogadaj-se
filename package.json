@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/iCarrrot/Pogadaj-se#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "ejs": "^2.5.7",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "express-session": "^1.15.6"
   }
 }
