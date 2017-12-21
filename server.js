@@ -31,7 +31,9 @@ app.get('/',function(req,res){
 app.post('/login',function(req,res){
 	sess=req.session;	
 	sess.email=req.body.email;
+	console.log(sess.email)
 	res.end('done');
+	// res.redirect('/admin');
 });
 
 app.get('/admin',function(req,res){
