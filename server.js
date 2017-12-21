@@ -16,22 +16,68 @@ var app = express();
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(cookieParser());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+app.use(session({secret: 'ssshhhhh',saveUninitialized: true, resave: true}));
+ 
+var sess;
 var server = http.createServer(app);
 var io = socket(server);
 // nested sessios
-app.use('/sessions', session({
-    secret: 'keyboard cat',
-    store: new FileStore,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 1000 * 60 } //60 sec session
-}))
+// app.use('/sessions', session({
+//     secret: 'keyboard cat',
+//     store: new FileStore,
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { maxAge: 1000 * 60 } //60 sec session
+// }))
 
 app.get('/', (req, res) => {
-    var model = { https: 0, http: 1 };
-    res.render('main', model);
+	sess=req.session;
+	if(sess.email)
+	{
+		res.redirect('/main');
+	}
+	else{
+	res.render('index.ejs');
+	}
+});
+
+app.post('/login',function(req,res){
+	sess=req.session;	
+	sess.email=req.body.email;
+	res.end('done');
+});
+
+app.get('/main', (req,res)=> {
+	sess=req.session;
+	if(sess.email)	
+	{
+		res.write('<h1>Hello '+sess.email+'</h1><br>');
+		var model = { https: 0, http: 1 };
+		//res.render('main', model);
+		res.end('<a href='+'/logout'+'>Logout</a>');
+	}
+	else
+	{
+		res.write('<h1>Please login first.</h1>');
+		res.end('<a href='+'/'+'>Login</a>');
+	}
+	
+});
+app.get('/logout',function(req,res){
+	
+	req.session.destroy(function(err){
+		if(err){
+			console.log(err);
+		}
+		else
+		{
+			res.redirect('/');
+		}
+	});
+
 });
 
 app.get('/chat', (req, res) => {
@@ -47,7 +93,7 @@ app.get('/plik', (req, res) => {
 });
 
 app.get('/deklaracja', (req, res) => {
-    res.render('deklaracja');
+	res.render('deklaracja');
 });
 
 app.post('/deklaracja', (req, res) => {
@@ -127,35 +173,49 @@ app.get('/clear', (req, res) => {
     res.redirect('/');
 })
 
-app.get('/sessions', (req, res, next) => {
-    var sess = req.session;
+// app.get('/sessions', (req, res, next) => {
+//     var sess = req.session;
 
-    if (sess.name) {
-        res.write('Hi ' + sess.name + '\n');
-    } else {
-        sess.name = req.query.name;
-    }
-    next();
-})
-app.get('/sessions', (req, res) => {
-    var sess = req.session
+//     if (sess.name) {
+//         res.write('Hi ' + sess.name + '\n');
+//     } else {
+//         sess.name = req.query.name;
+//     }
+//     next();
+// })
+// app.get('/sessions', (req, res) => {
+//     var sess = req.session
 
-    if (sess.views) {
-        sess.views++
-        res.write('views: ' + sess.views + '\n')
-        res.write('expires in: ' + (sess.cookie.maxAge / 1000) + 's')
-        res.end()
-    } else {
-        sess.views = 1
-        res.end('welcome to the session demo. refresh!')
-    }
-})
+//     if (sess.views) {
+//         sess.views++
+//         res.write('views: ' + sess.views + '\n')
+//         res.write('expires in: ' + (sess.cookie.maxAge / 1000) + 's')
+//         res.end()
+//     } else {
+//         sess.views = 1
+//         res.end('welcome to the session demo. refresh!')
+//     }
+// })
 
 
 app.use((req, res, next) => {
     res.render('404.ejs', { url: req.url });
 });
 
+app.get('/admin',function(req,res){
+	sess=req.session;
+	if(sess.email)	
+	{
+		res.write('<h1>Hello '+sess.email+'</h1><br>');
+		res.end('<a href='+'/logout'+'>Logout</a>');
+	}
+	else
+	{
+		res.write('<h1>Please login first.</h1>');
+		res.end('<a href='+'/'+'>Login</a>');
+	}
+
+});
 
 
 // tu uruchamiamy serwer
