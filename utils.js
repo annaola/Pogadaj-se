@@ -27,6 +27,9 @@ module.exports = {
             dict[num] = parseInt(text);
         }
         return dict
+    },
+    isValid: function (email, password) {
+        // TODO
+        return true;
     }
-
 }
