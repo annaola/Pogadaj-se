@@ -2,6 +2,7 @@
 <meta charset="utf-8" />
 
 <head>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
     <script src="/socket.io/socket.io.js"></script>
     <script src="/appjs.js"></script>
     <script>
@@ -31,7 +32,7 @@
                                 </div>`
                     fList.innerHTML += box;
                 };
-                
+
             });
 
 
@@ -39,7 +40,7 @@
             //wyświetlanie wiadomości:
             socket.on('chat message', function (data) {
                 var msg = document.getElementById('messages');
-                msg.innerHTML += data + "<br/>";
+                msg.innerHTML += '<p class="incmsg">' + data + '</p>' + "<br/>";
             });
 
             //Wysyłanie wiadomości:
@@ -57,7 +58,7 @@
 <body>
     <div id="body">
         <div id="friendBox">
-            
+
         </div>
         <div id="chatBox">Aktualny czas na serwerze:
             <br>

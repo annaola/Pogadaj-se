@@ -16,7 +16,8 @@ var print = console.log
 
 var app = express();
 app.set('view engine', 'ejs');
-app.set('views', './views');
+app.use(express.static(__dirname + '/public'));
+app.set('views', 'public/views');
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -109,10 +110,10 @@ server.listen(process.env.PORT || 3000);
 
 console.log('serwer started');
 
-socketList=[];
+socketList = [];
 io.on('connection', function (socket) {
 	console.log('client connected:' + socket.id);
-	socketList.push(socket.id);
+	socketList.push(socket);
 	socket.on('friend list', function (data) {
 		print(data);
 		var friendList = utils.friendList(sess.email);
@@ -122,8 +123,9 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('chat message', function (data) {
-		io.emit('chat message', data); // do wszystkich
-		// socket.emit('chat message', data); //tylko do połączonego
+		// io.emit('chat message', data); // do wszystkich
+		socketList[0].emit('chat message', data);//TODO dodać tworzenie pokojów
+		socket.emit('chat message', data); //tylko do połączonego
 	});
 });
 
@@ -134,5 +136,5 @@ io.on('connection', function (socket) {
 setInterval(function () {
 	var date = new Date().toString();
 	io.emit('time', date.toString());
-	// print(socketList);
-}, 1000);
+	print(socketList);//można wywalić
+}, 10000);
