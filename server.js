@@ -109,13 +109,14 @@ server.listen(process.env.PORT || 3000);
 
 console.log('serwer started');
 
+socketList=[];
 io.on('connection', function (socket) {
 	console.log('client connected:' + socket.id);
-
+	socketList.push(socket.id);
 	socket.on('friend list', function (data) {
 		print(data);
 		var friendList = utils.friendList(sess.email);
-		io.emit('friend list', friendList);
+		socket.emit('friend list', friendList);
 		// io.emit('chat message', data); // do wszystkich
 		// socket.emit('chat message', data); //tylko do połączonego
 	});
@@ -133,4 +134,5 @@ io.on('connection', function (socket) {
 setInterval(function () {
 	var date = new Date().toString();
 	io.emit('time', date.toString());
+	// print(socketList);
 }, 1000);
