@@ -31,5 +31,19 @@ module.exports = {
     isValid: function (email, password) {
         // TODO
         return true;
-    }
+    },
+    friendList: function (email) {
+        // TODO
+        //można założyć, że maile są unikalne, mogą być naszym id na razie
+        friends=[];
+        for (let i = 0; i < 5; i++) {
+            friends[i]={
+                email: `${i}`+email,
+                id: `${i}`+email,
+                name: `Mister von ${i}stein`
+            };
+            
+        }
+        return friends;
+    },
 }
