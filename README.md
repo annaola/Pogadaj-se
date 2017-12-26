@@ -8,13 +8,16 @@ Projrekt na WEPPO
     - [ ] Na Wiadomości (id pokoju, id usera, treść, id wiadomości);
     - [ ] (?) Na pokoje;
 
-- [ ] Tworzenie/dołączanie do pokojów ( id pokoju: concat(sort(idU1, idU2, ..);
+- [x] Tworzenie/dołączanie do pokojów ( id pokoju: concat(sort(idU1, idU2, ..);
 - [ ] Dodanie wielowątkowości wiadomości;
 - [ ] CSS:
     - [ ] Autoprzewijanie;
     - [ ] inny kolor wiadoomości od kogoś
 - [x] Ekran Logowania;
 - [ ] Nie tworzyć socketa jeżeli user jest nie zalogowany;
+- [ ] Dodać przycisk "nowa wiadomość"
+    - [ ] Podpowiadanie urzytkowników z BD (niekoniecznie znajomych)
+- [ ] Wiadomości do wielu osób
 
 
 
