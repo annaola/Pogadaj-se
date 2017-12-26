@@ -89,7 +89,7 @@ app.get('/logout', function (req, res) {
 
 app.get('/chat', (req, res) => {
 	if (sess.isValid) {
-		model = {}
+		model = {email: sess.email}
 		res.render('chat', model);
 	}
 	else {
@@ -109,24 +109,44 @@ app.use((req, res, next) => {
 server.listen(process.env.PORT || 3000);
 
 console.log('serwer started');
-
+//Lista socketów, żeby wiedzieć do kogo wysyłać
 socketList = [];
 io.on('connection', function (socket) {
 	console.log('client connected:' + socket.id);
-	socketList.push(socket);
+	if (sess.isValid) {
+		print(socket.room);
+		socketList.push(socket);
+	}
+
 	socket.on('friend list', function (data) {
-		print(data);
+		// print(data);
+		// print(socketList)
+		//Tymczasowo na tym kanale usuwam socket z listy
+		if (data == "1") {
+			socketList.splice(socketList.indexOf(socket), 1); //na wyjściu usuwam kanał z listy aktywnych
+		}
 		var friendList = utils.friendList(sess.email);
 		socket.emit('friend list', friendList);
-		// io.emit('chat message', data); // do wszystkich
-		// socket.emit('chat message', data); //tylko do połączonego
+		socket.emit('chat message', socket.id);//diagnostic
+	});
+
+	socket.on('room', function (room) {
+		print(room);
+		print(socket.room);
+		if(socket.room){
+			socket.leave(socket.room);
+		}
+		socket.join(room);
+		socket.room=room;
+		socket.emit('chat message', "joined "+ room);//diagnostic
 	});
 
 	socket.on('chat message', function (data) {
-		// io.emit('chat message', data); // do wszystkich
-		socketList[0].emit('chat message', data);//TODO dodać tworzenie pokojów
-		socket.emit('chat message', data); //tylko do połączonego
+		io.to(socket.room).emit('chat message', data);
+		// socket.rooms
 	});
+
+
 });
 
 
@@ -136,5 +156,5 @@ io.on('connection', function (socket) {
 setInterval(function () {
 	var date = new Date().toString();
 	io.emit('time', date.toString());
-	print(socketList);//można wywalić
-}, 10000);
+	print(socketList.map(a=>a.id));//można wywalić
+}, 1000);

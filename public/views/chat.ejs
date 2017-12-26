@@ -4,12 +4,31 @@
 <head>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/appjs.js"></script>
+    <!-- <script src="/appjs.js"></script> -->
     <script>
+        var socket = io();
+        function makeRoomName(userList) {
+            sList = userList.sort();//.map(l => l.id).sort();
+            name = ''
+            for (const user in sList) {
+                name += sList[user].toString();
+            }
+            return name;
+        }
+        function chooseRoom(homeEmail, mailList) {
+            // alert("działa")
+            if (mailList == []) {
+                alert("Nie możesz (jeszcze) pisać do samego siebie")
+            } else {
+                room = makeRoomName([homeEmail].concat(mailList));
+                socket.emit('room', room);
+            }
+        }
+        window.addEventListener('beforeunload', function (event) {
+            socket.emit('friend list', "1");
+        });
         window.addEventListener('load', function () {
 
-
-            var socket = io();
             //wyświetlanie czasu
             socket.on('time', function (data) {
                 var t = document.getElementById('time');
@@ -24,18 +43,14 @@
 
                 for (const friend in list) {
                     var box = `<div 
-                                class="dvfriends"
-                                id="${"fr" + list[friend].id}" 
-                                onclick="alert('${list[friend].email}');" 
-                                style="cursor: pointer;">
-                                    ${list[friend].name}
-                                </div>`
+                    class="dvfriends"
+                    id="${"fr" + list[friend].id}" 
+                    onclick="chooseRoom('<%= email %>',['${list[friend].email}']);" 
+                    style="cursor: pointer;">${list[friend].name}</div>`
                     fList.innerHTML += box;
                 };
 
             });
-
-
 
             //wyświetlanie wiadomości:
             socket.on('chat message', function (data) {
@@ -57,7 +72,9 @@
 
 <body>
     <div id="body">
+
         <div id="friendBox">
+            <button onClick="location.href='../main'">Powrót</button>
 
         </div>
         <div id="chatBox">Aktualny czas na serwerze:

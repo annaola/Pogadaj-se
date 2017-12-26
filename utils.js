@@ -1,33 +1,4 @@
 module.exports = {
-    intDictEncode: function (dict) {
-        var text = ""
-        for (const d in dict) {
-            text = text + '+' + dict[d].toString();
-        }
-        text=text.slice(1)
-        console.log(text)
-        return text
-    },
-    intDictDecode: function (str) {
-        var text = ""
-        var dict = {}
-        var num = 1
-        console.log(str);
-        for (const s in str) {
-            if (str[s] != '+') {
-                text += str[s];
-            }
-            else {
-                dict[num] = parseInt(text);
-                text = '';
-                num += 1;
-            }
-        }
-        if (text!='') {
-            dict[num] = parseInt(text);
-        }
-        return dict
-    },
     isValid: function (email, password) {
         // TODO
         return true;
@@ -44,6 +15,27 @@ module.exports = {
             };
             
         }
+        if (email=="michal.mar3@gmail.com") {
+            friends[5]={
+                email: "basia.martusewicz@gmail.com",
+                id: "basia.martusewicz@gmail.com",
+                name: `Basia Martusewicz`
+            };
+        } else {
+            friends[5]={
+                email: "michal.mar3@gmail.com",
+                id: "michal.mar3@gmail.com",
+                name: `Michał Martusewicz`
+            };
+        }
         return friends;
     },
+    makeRoomName: function (userList){
+        sList=userList.map(l => l.id).sort();
+        name=''
+        for (const user in sList) {
+            name+=sList[user].toString();
+        }
+        return name;
+    }
 }
