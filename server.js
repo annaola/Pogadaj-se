@@ -62,6 +62,11 @@ app.post('/login', function (req, res) {
 
 	print(sess.email, sess.pass);
 });
+app.post('/register', function (req, res) {
+	//TODO
+	res.redirect('/main');
+
+});
 
 app.get('/main', (req, res) => {
 	sess = req.session;
@@ -89,7 +94,7 @@ app.get('/logout', function (req, res) {
 
 app.get('/chat', (req, res) => {
 	if (sess.isValid) {
-		model = {email: sess.email}
+		model = { email: sess.email }
 		res.render('chat', model);
 	}
 	else {
@@ -109,43 +114,47 @@ app.use((req, res, next) => {
 server.listen(process.env.PORT || 3000);
 
 console.log('serwer started');
-//Lista socketów, żeby wiedzieć do kogo wysyłać
+//Lista socketów, xhyba się przyda
 socketList = [];
+
 io.on('connection', function (socket) {
-	console.log('client connected:' + socket.id);
 	if (sess.isValid) {
-		print(socket.room);
-		socketList.push(socket);
+		console.log('client connected:' + socket.id);
+		if (sess.isValid) {
+			print(socket.room);
+			socketList.push(socket);
+		}
+
+		socket.on('friend list', function (data) {
+			var friendList = utils.friendList(sess.email);
+			socket.emit('friend list', friendList);
+			socket.emit('chat message', socket.id);//diagnostic
+		});
+
+		socket.on('diag', function (data) {
+			if (data == "exit") {
+				socketList.splice(socketList.indexOf(socket), 1); //na wyjściu usuwam kanał z listy aktywnych
+			}
+		})
+		socket.on('room', function (room) {
+			print(room);
+			print(socket.room);
+			if (socket.room) {
+				socket.leave(socket.room);
+			}
+			socket.join(room);
+			socket.room = room;
+			socket.emit('chat message', "joined " + room);//diagnostic
+		});
+
+		socket.on('chat message', function (data) {
+			io.to(socket.room).emit('chat message', data);
+			// socket.rooms
+		});
 	}
-
-	socket.on('friend list', function (data) {
-		// print(data);
-		// print(socketList)
-		//Tymczasowo na tym kanale usuwam socket z listy
-		if (data == "1") {
-			socketList.splice(socketList.indexOf(socket), 1); //na wyjściu usuwam kanał z listy aktywnych
-		}
-		var friendList = utils.friendList(sess.email);
-		socket.emit('friend list', friendList);
-		socket.emit('chat message', socket.id);//diagnostic
-	});
-
-	socket.on('room', function (room) {
-		print(room);
-		print(socket.room);
-		if(socket.room){
-			socket.leave(socket.room);
-		}
-		socket.join(room);
-		socket.room=room;
-		socket.emit('chat message', "joined "+ room);//diagnostic
-	});
-
-	socket.on('chat message', function (data) {
-		io.to(socket.room).emit('chat message', data);
-		// socket.rooms
-	});
-
+	else {
+		socket.emit('diag', 'notLogged');
+	}
 
 });
 
@@ -156,5 +165,5 @@ io.on('connection', function (socket) {
 setInterval(function () {
 	var date = new Date().toString();
 	io.emit('time', date.toString());
-	print(socketList.map(a=>a.id));//można wywalić
+	print(socketList.map(a => a.id));//można wywalić
 }, 1000);

@@ -6,6 +6,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
+        //Funkcja do roobienia nazw pokojów, na razie naiwna
         function makeRoomName(userList) {
             sList = userList.sort();//.map(l => l.id).sort();
             name = ''
@@ -14,6 +15,7 @@
             }
             return name;
         }
+        //funckja do wybierania konkretnego pokoju
         function chooseRoom(homeEmail, mailList) {
             // alert("działa")
             if (mailList == []) {
@@ -21,11 +23,21 @@
             } else {
                 room = makeRoomName([homeEmail].concat(mailList));
                 socket.emit('room', room);
-            }
+            }1
         }
+        socket.on('diag', function (data){
+            if(data="notLogged"){
+                var b = document.getElementById('inBody');
+                b.innerHTML = "<h1 class='error'>Zaloguj się!</h1>";
+                alert("Musisz się zalogować!");
+                window.location.href='../';
+            }
+        })
+        //emitowanie informacji o wyjściu z czatu, żeby usunąć socket z listy aktywnych
         window.addEventListener('beforeunload', function (event) {
-            socket.emit('friend list', "1");
+            socket.emit('diag', "exit");
         });
+
         window.addEventListener('load', function () {
 
             //wyświetlanie czasu
@@ -33,14 +45,17 @@
                 var t = document.getElementById('time');
                 t.innerHTML = data;
             });
-
+            //prośba o listę znajomych
             socket.emit('friend list', "start");
 
+            //otrzymanie listy znajomych
             socket.on('friend list', function (list) {
                 var fList = document.getElementById('friendBox');
                 fList.innerHTML += "<h1>Friends:</h1>";
 
                 for (const friend in list) {
+                    //to chyba nie jest najładniejszy sposób, ale działa.
+                    //Każdy wpis z listy przyjaciół pakuję w diva
                     var box = `<div 
                     class="dvfriends"
                     id="${"fr" + list[friend].id}" 
@@ -62,7 +77,6 @@
             btsend.addEventListener('click', function () {
                 var txtmessage = document.getElementById('txtmessage');
                 socket.emit('chat message', txtmessage.value);
-                // socket.emit('friend list', "start");
             });
 
         });
@@ -70,7 +84,7 @@
 </head>
 
 <body>
-    <div id="body">
+    <div id="inBody">
 
         <div id="friendBox">
             <button onClick="location.href='../main'">Powrót</button>
