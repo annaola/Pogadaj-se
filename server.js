@@ -121,7 +121,7 @@ io.on('connection', function (socket) {
 	if (sess.isValid) {
 		console.log('client connected:' + socket.id);
 		if (sess.isValid) {
-			print(socket.room);
+			// print(socket.room);
 			socketList.push(socket);
 		}
 
@@ -165,5 +165,5 @@ io.on('connection', function (socket) {
 setInterval(function () {
 	var date = new Date().toString();
 	io.emit('time', date.toString());
-	print(socketList.map(a => a.id));//można wywalić
+	// print(socketList.map(a => a.id));//można wywalić
 }, 1000);
