@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var socket = require('socket.io');
-
+var bootstrap = require('bootstrap')
 var print = console.log
 
 var app = express();
@@ -46,6 +46,19 @@ app.get('/', (req, res) => {
 		res.render('index.ejs');
 	}
 });
+app.get('/login', (req, res) => {
+	//TODO
+	//logout first
+	res.render('login.ejs');
+
+});
+
+app.get('/register', (req, res) => {
+	//TODO
+	//logout first
+	res.render('register.ejs');
+});
+
 
 app.post('/login', function (req, res) {
 	sess = req.session;

@@ -29,23 +29,23 @@
                     <li>
                         <a href="/chat">Chat</a>
                     </li>
-                    <li>
-                        <a href="/login">Zaloguj</a>
-                    </li>
-                    <li>
-                        <a href="/register">Zarejestruj</a>
-                    </li>
-
+                    
                 </ul>
             </nav>
         </div>
         <br/>
 
-        <div class="jumbotron">
-            <h1>Witaj na Pogadaj-se!</h1>
-            <p>
-                Pierwszy na świecie portal do rozmów, który nie działa. Zobacz ja bugi potrafią łączyć ludzi w wielką, światową społeczność!
-            </p>
+        <div class="form">
+            <label for="form">Zarejestruj się</label>
+            <form class="register-form" action="/register" method="POST">
+                <input type="text" placeholder="name" name="name" />
+                <input type="password" placeholder="password" name="pass" />
+                <input type="email" placeholder="email address" name="email" />
+                <input type="submit" value="Zarejestruj" />
+                <p class="message">Masz już konto?
+                    <a href="location.href='/register'">Zaloguj się</a>
+                </p>
+            </form>
         </div>
     </div>
 
