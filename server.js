@@ -11,7 +11,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var socket = require('socket.io');
-var bootstrap = require('bootstrap')
+// var bootstrap = require('bootstrap')
 var print = console.log
 
 var app = express();
