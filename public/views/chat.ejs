@@ -63,17 +63,27 @@
             //otrzymanie listy znajomych
             socket.on('friend list', function (list) {
                 var fList = document.getElementById('friendBox');
+                var fListMenu = document.getElementById('FriendsOnMenu');
                 fList.innerHTML += "<h1>Friends:</h1>";
 
                 for (const friend in list) {
                     //to chyba nie jest najładniejszy sposób, ale działa.
                     //Każdy wpis z listy przyjaciół pakuję w diva
-                    var box = `<div 
+                    var box1 = `<div 
                     class="dvFriends"
-                    id="${"fr" + list[friend].id}" 
-                    onclick="chooseRoom('<%= email %>',['${list[friend].email}']);" 
-                    style="cursor: pointer;">${list[friend].name}</div>`
-                    fList.innerHTML += box;
+                                     id="fr${list[friend].id}" 
+                                     onclick="chooseRoom('<%= email %>',['${list[friend].email}']);" 
+                                     style="cursor: pointer;">${list[friend].name}</div>`
+
+                    var box2 = `<a  class="dropdown-item"
+                                    onclick="chooseRoom('<%= email %>',['${list[friend].email}']);"
+                                    style="cursor: pointer;"
+                                    id="fr${list[friend].id}">
+                                        ${list[friend].name}
+                                </a>`
+                    fList.innerHTML += box1;
+                    fListMenu.innerHTML += box2;
+
                 };
 
             });
@@ -97,6 +107,72 @@
 
 <body>
     <div id="inBody">
+        <!-- pasek nawigacyjny -->
+        <nav class="navbar navbar-expand-sm navbar-light bg-success">
+            <!-- Tytuł paska nawigacyjnego -->
+            <a class="navbar-brand" href="/">
+                <img src="http://icons.iconarchive.com/icons/froyoshark/enkel/512/iMessage-icon.png" width="30" height="30" class="d-inline-block align-top"
+                    alt=""> Pogadaj se!
+            </a>
+
+            <!-- Guzik menu, który się pojawia po zmianie szerokości paska -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarChat" aria-controls="navbarChat"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarChat">
+
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Powrót</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Wyloguj</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="/">Disabled</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown03" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">Znajomi</a>
+                        <div class="dropdown-menu" aria - labelledby="Friends" id="FriendsOnMenu">
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- <div class="collapse" id="Button">
+            <div class="navbar-light bg-light p-4">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/main">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/main">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/main">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <br/> -->
+
+
+
+
+
 
         <div id="friendBox">
             <input type="button" onClick="location.href='../main'" value="Powrót" />

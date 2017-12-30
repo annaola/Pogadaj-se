@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Błąd</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
         crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -14,14 +15,54 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
         crossorigin="anonymous"></script>
+
+
     <link rel="stylesheet" type="text/css" href="styles/style.css">
-    
+
 </head>
 
 <body>
-    {% include docs-navbar.html %}
-    <h1>Musisz być zalogowany!</h1>
-    <input type="button" onClick="location.href='/login'" value="Zaloguj"/>
+    <div>
+        <nav class="navbar navbar-expand-md navbar-light bg-success">
+            <!-- Tytuł paska nawigacyjnego -->
+            <a class="navbar-brand" href="/">
+                <img src="http://icons.iconarchive.com/icons/froyoshark/enkel/512/iMessage-icon.png" width="30" height="30" class="d-inline-block align-top"
+                    alt=""> Pogadaj se!
+            </a>
+
+            <!-- Guzik menu, który się pojawia po zmianie szerokości paska -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse">
+
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Zaloguj</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Zarejestruj</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="/chat">Chat</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+
+        <h1>Musisz być zalogowany!</h1>
+        <input type="button" onClick="location.href='/login'" value="Zaloguj" />
+    </div>
+
 
 
 </body>
