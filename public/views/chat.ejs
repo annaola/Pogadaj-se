@@ -34,6 +34,8 @@
                 alert("Nie możesz (jeszcze) pisać do samego siebie")
             } else {
                 room = makeRoomName([homeEmail].concat(mailList));
+                msg = document.getElementById("messages");
+                msg.innerHTML = "";
                 socket.emit('room', room);
             } 1
         }
@@ -91,7 +93,7 @@
             //wyświetlanie wiadomości:
             socket.on('chat message', function (data) {
                 var msg = document.getElementById('messages');
-                msg.innerHTML += '<p class="incmsg">' + data + '</p>' + "<br/>";
+                msg.innerHTML += '<p class="incmsg">' + data + '</p>';
             });
 
             //Wysyłanie wiadomości:
@@ -169,14 +171,7 @@
         </div>
         <br/> -->
 
-
-
-
-
-
         <div id="friendBox">
-            <input type="button" onClick="location.href='../main'" value="Powrót" />
-
         </div>
         <div id="chatBox">Aktualny czas na serwerze:
             <br>
