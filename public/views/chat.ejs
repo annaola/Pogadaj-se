@@ -16,6 +16,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
+
     <script>
         var socket = io();
         //Funkcja do roobienia nazw pokojów, na razie naiwna
@@ -37,7 +38,7 @@
                 msg = document.getElementById("messages");
                 msg.innerHTML = "";
                 socket.emit('room', room);
-            } 1
+            } ;
         }
         socket.on('diag', function (data) {
             if (data = "notLogged") {
@@ -72,7 +73,7 @@
                     //to chyba nie jest najładniejszy sposób, ale działa.
                     //Każdy wpis z listy przyjaciół pakuję w diva
                     var box1 = `<div 
-                    class="dvFriends"
+                                     class="dvFriends"
                                      id="fr${list[friend].id}" 
                                      onclick="chooseRoom('<%= email %>',['${list[friend].email}']);" 
                                      style="cursor: pointer;">${list[friend].name}</div>`
@@ -169,6 +170,7 @@
         <br/> -->
 
         <div id="friendBox">
+            
         </div>
         <div id="chatBox">Aktualny czas na serwerze:
             <br>
@@ -179,7 +181,9 @@
             <div>
                 <input type='text' id='txtmessage' />
                 <input type="button" id='btsend' value="Wyślij" />
-                <div id='messages'></div>
+                <div id='messages'>
+                    
+                </div>
             </div>
         </div>
 

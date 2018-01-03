@@ -11,7 +11,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var socket = require('socket.io');
-// var bootstrap = require('bootstrap')
 var print = console.log
 
 var app = express();
@@ -70,10 +69,10 @@ app.post('/login', function (req, res) {
 	}
 	else {
 		sess.isValid = false;
-		res.redirect('/errorlogin');
+		res.redirect('/errorlogin');//TODO okienko dialogowe
 	}
 
-	print(sess.email, sess.pass);
+	// print(sess.email, sess.pass);
 });
 app.post('/register', function (req, res) {
 	//TODO
@@ -127,7 +126,7 @@ app.use((req, res, next) => {
 server.listen(process.env.PORT || 3000);
 
 console.log('serwer started');
-//Lista socketów, xhyba się przyda
+//Lista socketów, chyba się przyda
 socketList = [];
 
 io.on('connection', function (socket) {
@@ -170,8 +169,6 @@ io.on('connection', function (socket) {
 	}
 
 });
-
-
 
 
 
