@@ -54,7 +54,11 @@
             </nav>
         </div>
         <br/>
-
+        <% if (errorLogin) { %>
+            <div class="alert alert-danger" role="alert">
+                Błąd logowania!
+            </div>
+        <% } %>
         <div class="form">
             <label for="form">Zaloguj się</label>
             <form class="login-form" action="/login" method="POST">

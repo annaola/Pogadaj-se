@@ -48,7 +48,8 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
 	//TODO
 	//logout first
-	res.render('login.ejs');
+	model = { errorLogin: false };
+	res.render('login.ejs', model);
 
 });
 
@@ -68,8 +69,10 @@ app.post('/login', function (req, res) {
 		res.redirect('/main');
 	}
 	else {
+		model = { errorLogin: true };
 		sess.isValid = false;
-		res.redirect('/errorlogin');//TODO okienko dialogowe
+		res.render('/login', model)
+		// res.redirect('/errorlogin');//TODO okienko dialogowe
 	}
 
 	// print(sess.email, sess.pass);
