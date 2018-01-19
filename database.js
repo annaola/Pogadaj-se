@@ -31,7 +31,11 @@ module.exports = {
                     con.query(sql, function(err, result) {
                         if (err) throw err;
                         print(result.message);
+<<<<<<< 3c6a4fb3e825e51b1ed80f965d5f2a103ad83a07
                     }); 
+=======
+                    });
+>>>>>>> Users database
                 });
             });
         })
@@ -41,7 +45,11 @@ module.exports = {
         con.query(sql, [name, email, pswd], function(err, result) {
             if (err) throw err;
             print("record inserted")
+<<<<<<< 3c6a4fb3e825e51b1ed80f965d5f2a103ad83a07
         });
+=======
+        })
+>>>>>>> Users database
     },
     showAllUsers: function () {
         con.query("SELECT * FROM users", function(err, result) {
@@ -49,6 +57,7 @@ module.exports = {
             print(result);
         })
     },
+<<<<<<< 3c6a4fb3e825e51b1ed80f965d5f2a103ad83a07
     checkIfUserExists: function (name, email, callback) {
         var sql = "SELECT 1 FROM users WHERE name = ? OR email = ?";
         con.query(sql, [name, email], function (err, result) {
@@ -65,6 +74,22 @@ module.exports = {
                 if (result.length > 0) callback(null, true);
                 else callback(null, false);
             }
+=======
+    checkIfUserExists: function (name, email) {
+        var sql = "SELECT 1 FROM users WHERE name = ? OR email = ?";
+        con.query(sql, [name, email], function (err, result) {
+            if (err) throw err;
+            if (result.length > 0) return true;
+            return false;
+        })
+    },
+    checkValidLogData: function (email, pass) {
+        var sql = "SELECT 1 FROM users WHERE email = ? AND pswd = ?";
+        con.query(sql, [email, pass], function (err, result) {
+            if (err) throw err;
+            if (result.length > 0) return true;
+            return false;
+>>>>>>> Users database
         });
     }
 };
