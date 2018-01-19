@@ -2,6 +2,7 @@ var http = require('http');
 var express = require('express');
 var url = require('url')
 var utils = require('./utils.js');
+var db = require('./database.js');
 var https = require('https');
 var fs = require('fs');
 var multer = require('multer')
@@ -64,7 +65,7 @@ app.post('/login', function (req, res) {
 	sess = req.session;
 	sess.email = req.body.email;
 	sess.pass = req.body.password;
-	if (utils.isValid(sess.email, sess.pass)) {
+	if (db.checkValidLogData(sess.email, sess.pass)) {
 		sess.isValid = true;
 		res.redirect('/main');
 	}
@@ -78,8 +79,18 @@ app.post('/login', function (req, res) {
 	// print(sess.email, sess.pass);
 });
 app.post('/register', function (req, res) {
-	//TODO
-	res.redirect('/main');
+	name = req.body.name;
+	pass = req.body.pass;
+	email = req.body.email;
+	print(req);
+	if (!db.checkIfUserExists(name, email)) {
+		db.createUser(name, email, pass);
+		res.redirect('/login');
+	}
+	else {
+		// jakiś error
+		res.redirect('/');
+	}
 
 });
 
@@ -180,3 +191,10 @@ setInterval(function () {
 	io.emit('time', date.toString());
 	// print(socketList.map(a => a.id));//można wywalić
 }, 1000);
+
+// db.deleteDb();
+db.initDb();
+db.useDb();
+//db.createUser("anna", "cokolwiek", "123");
+db.showAllUsers();
+//db.checkIfUserExists("cokolwiek");
