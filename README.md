@@ -11,7 +11,7 @@ Projrekt na WEPPO
 - [x] Tworzenie/dołączanie do pokojów ( id pokoju: concat(sort(idU1, idU2, ..);
 - [ ] Dodanie wielowątkowości wiadomości;
 - [ ] CSS:
-    - [ ] Autoprzewijanie;
+    - [x] Autoprzewijanie;
     - [ ] inny kolor wiadoomości od kogoś
 - [x] Ekran Logowania;
 - [ ] Nie tworzyć socketa jeżeli user jest nie zalogowany;
