@@ -50,11 +50,14 @@
 }
 
 #chatBox {
+    margin-top: 10px;
     margin-left: 10px;
     float: left;
     /* border-style: solid;  */
     width: 82%;
     background-color: rgba(196, 202, 202, 0.487);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
 }
 
 #messages {

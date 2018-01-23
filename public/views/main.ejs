@@ -17,6 +17,12 @@
         crossorigin="anonymous"></script>
 
     <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <script> 
+        function addFriend(){
+
+        }
+    
+    </script>
 </head>
 
 <body>
@@ -60,8 +66,34 @@
                 <%= email %> na Pogadaj se! </h1>
             <h2>Na razie strona jest w budowie, ale możesz wypróbować super ficzery:</h2>
             <button type="button"onclick="location.href='/chat';" class="btn btn-success btn-lg">Chat</button>
-            <button type="button" onclick="location.href='/#';" class="btn btn-info btn-lg">Dodaj znajomego</button>
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addFriendModal">Dodaj znajomego</button>
             <button type="button" onclick="location.href='/logout';" class="btn btn-warning btn-lg">Wyloguj</button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="addFriendModal" tabindex="-1" role="dialog" aria-labelledby="addFriendModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="title">Dodaj znajomego</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                    <label for="friendEmail">Podaj email przyjaciela</label><br>
+                    <input type="email" id=friendEmail name="friendEmail" placeholder="Email">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                    <button type="submit" class="btn btn-primary">Dodaj</button>
+                </div>
+                </form>
+                
+                </div>
+            </div>
+            </div>
+            
         </div>
     </div>
 
