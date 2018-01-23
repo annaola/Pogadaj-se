@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
 
     <script>
+        
         var socket = io();
         //Funkcja do roobienia nazw pokojów, na razie naiwna
         function makeRoomName(userList) {
@@ -94,7 +95,9 @@
             //wyświetlanie wiadomości:
             socket.on('chat message', function (data) {
                 var msg = document.getElementById('messages');
+                
                 msg.innerHTML += '<p class="incmsg">' + data + '</p>';
+                msg.scrollTop = msg.scrollHeight;
             });
 
             //Wysyłanie wiadomości:
@@ -102,6 +105,7 @@
             btsend.addEventListener('click', function () {
                 var txtmessage = document.getElementById('txtmessage');
                 socket.emit('chat message', txtmessage.value);
+                txtmessage.value = "";
             });
 
         });
@@ -173,17 +177,22 @@
             
         </div>
         <div id="chatBox">Aktualny czas na serwerze:
+        
             <br>
             <b>
                 <span id="time"></span>
             </b>
 
             <div>
-                <input type='text' id='txtmessage' />
-                <input type="button" id='btsend' value="Wyślij" />
+                
                 <div id='messages'>
                     
                 </div>
+                <div id=inputMessages>
+                    <input type='text' style="text-align: right;" id='txtmessage' />
+                    <input type="button" class= "btn btn-primary btn-block" id='btsend' value="Wyślij" />
+                </div>
+                
             </div>
         </div>
 

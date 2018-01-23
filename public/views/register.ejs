@@ -56,17 +56,32 @@
         </div>
         <br/>
 
-        <div class="form">
-            <label for="form">Zarejestruj się</label>
-            <form class="register-form" action="/register" method="POST">
-                <input type="text" placeholder="name" name="name" />
-                <input type="password" placeholder="password" name="pass" />
-                <input type="email" placeholder="email address" name="email" />
-                <input type="submit" value="Zarejestruj" />
-                <p class="message">Masz już konto?
-                    <a href="/login">Zaloguj się</a>
-                </p>
-            </form>
+        <div class="form row align-items-center">
+            <div class="col">
+            </div>
+            <div class="col">
+                <form class="form-signin"  action="/login" method="POST">
+                    <img class="mb-4" src="http://icons.iconarchive.com/icons/froyoshark/enkel/512/iMessage-icon.png" alt="" width="72" height="72">
+                    <h1 class="h3 mb-3 font-weight-normal">Zarejestruj się</h1>
+
+                    <label for="inputName" class="sr-only">Imię i nazwisko</label>
+                    <input type="Name" id="inputName" class="form-control" placeholder="Imię i nazwisko" name="name" required autofocus>
+
+                    <label for="inputEmail" class="sr-only">Adres email</label>
+                    <input type="email" id="inputEmail" class="form-control" placeholder="Adres email" name="email" required>
+
+                    <label for="inputPassword" class="sr-only">Hasło</label>
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Hasło" required>
+
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Zarejestruj</button>
+                    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+                    <p class="message">Nie masz konta?
+                            <a href="/register">Zarejestruj się!</a>
+                    </p>
+                </form>
+            </div>
+            <div class="col">
+            </div>
         </div>
     </div>
 

@@ -59,16 +59,26 @@
                 Błąd logowania!
             </div>
         <% } %>
-        <div class="form">
-            <label for="form">Zaloguj się</label>
-            <form class="login-form" action="/login" method="POST">
-                <input type="email" placeholder="email" name="email" />
-                <input type="password" placeholder="password" name="pass" />
-                <input type="submit" value="Zaloguj" />
-                <p class="message">Nie masz konta?
-                    <a href="/register">Zarejestruj się!</a>
-                </p>
-            </form>
+        <div class="form row align-items-center">
+            <div class="col">
+            </div>
+            <div class="col">
+                <form class="form-signin"  action="/login" method="POST">
+                    <img class="mb-4" src="http://icons.iconarchive.com/icons/froyoshark/enkel/512/iMessage-icon.png" alt="" width="72" height="72">
+                    <h1 class="h3 mb-3 font-weight-normal">Zaloguj się</h1>
+                    <label for="inputEmail" class="sr-only">Adres email</label>
+                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" name="email" required autofocus>
+                    <label for="inputPassword" class="sr-only">Hasło</label>
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Zaloguj</button>
+                    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+                    <p class="message">Nie masz konta?
+                            <a href="/register">Zarejestruj się!</a>
+                    </p>
+                </form>
+            </div>
+            <div class="col">
+            </div>
         </div>
     </div>
 
