@@ -143,7 +143,7 @@ io.on('connection', function (socket) {
 		socket.on('friend list', function (data) {
 			var friendList = utils.friendList(sess.email);
 			socket.emit('friend list', friendList);
-			socket.emit('chat message', socket.id);//diagnostic
+			socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
 		});
 
 		socket.on('diag', function (data) {
@@ -159,11 +159,11 @@ io.on('connection', function (socket) {
 			}
 			socket.join(room);
 			socket.room = room;
-			socket.emit('chat message', "joined " + room);//diagnostic
+			socket.emit('chat message', {value: "joined " + room, email: sess.email});//diagnostic
 		});
 
 		socket.on('chat message', function (data) {
-			io.to(socket.room).emit('chat message', data);
+			io.to(socket.room).emit('chat message',  data);
 			// socket.rooms
 		});
 	}

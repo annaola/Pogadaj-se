@@ -12,7 +12,7 @@ Projrekt na WEPPO
 - [ ] Dodanie wielowątkowości wiadomości;
 - [ ] CSS:
     - [x] Autoprzewijanie;
-    - [ ] inny kolor wiadoomości od kogoś
+    - [x] inny kolor wiadoomości od kogoś
 - [x] Ekran Logowania;
 - [ ] Nie tworzyć socketa jeżeli user jest nie zalogowany;
 - [ ] Dodać przycisk "nowa wiadomość"
