@@ -64,7 +64,6 @@ app.get('/register', (req, res) => {
 app.post('/login', function (req, res) {
 	sess = req.session;
 	sess.email = req.body.email;
-<<<<<<< 3c6a4fb3e825e51b1ed80f965d5f2a103ad83a07
 	sess.pass = req.body.pass;
 	print(sess.email);
 	print(sess.pass);
@@ -83,27 +82,11 @@ app.post('/login', function (req, res) {
 			};
 		};
 	});
-=======
-	sess.pass = req.body.password;
-	if (db.checkValidLogData(sess.email, sess.pass)) {
-		sess.isValid = true;
-		res.redirect('/main');
-	}
-	else {
-		model = { errorLogin: true };
-		sess.isValid = false;
-		res.render('/login', model)
-		// res.redirect('/errorlogin');//TODO okienko dialogowe
-	}
-
-	// print(sess.email, sess.pass);
->>>>>>> Users database
 });
 app.post('/register', function (req, res) {
 	name = req.body.name;
 	pass = req.body.pass;
 	email = req.body.email;
-<<<<<<< 3c6a4fb3e825e51b1ed80f965d5f2a103ad83a07
 	db.checkIfUserExists(name, email, function(err, data) {
 		if (err) throw err;
 		else{
@@ -117,18 +100,6 @@ app.post('/register', function (req, res) {
 			}
 		}
 	})
-=======
-	print(req);
-	if (!db.checkIfUserExists(name, email)) {
-		db.createUser(name, email, pass);
-		res.redirect('/login');
-	}
-	else {
-		// jakiś error
-		res.redirect('/');
-	}
-
->>>>>>> Users database
 });
 
 app.get('/main', (req, res) => {
@@ -234,7 +205,6 @@ setInterval(function () {
 	// print(socketList.map(a => a.id));//można wywalić
 }, 1000);
 
-<<<<<<< 3c6a4fb3e825e51b1ed80f965d5f2a103ad83a07
 // db.initDb();
 // db.useDb();
 // db.deleteDb();
@@ -243,11 +213,3 @@ db.useDb();
 
 //db.createUser("anna", "cokolwiek", "123");
 //db.showAllUsers();
-=======
-// db.deleteDb();
-db.initDb();
-db.useDb();
-//db.createUser("anna", "cokolwiek", "123");
-db.showAllUsers();
->>>>>>> Users database
-//db.checkIfUserExists("cokolwiek");
