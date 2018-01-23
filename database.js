@@ -31,7 +31,7 @@ module.exports = {
                     con.query(sql, function(err, result) {
                         if (err) throw err;
                         print(result.message);
-                    });
+                    }); 
                 });
             });
         })
@@ -41,7 +41,7 @@ module.exports = {
         con.query(sql, [name, email, pswd], function(err, result) {
             if (err) throw err;
             print("record inserted")
-        })
+        });
     },
     showAllUsers: function () {
         con.query("SELECT * FROM users", function(err, result) {
@@ -49,20 +49,22 @@ module.exports = {
             print(result);
         })
     },
-    checkIfUserExists: function (name, email) {
+    checkIfUserExists: function (name, email, callback) {
         var sql = "SELECT 1 FROM users WHERE name = ? OR email = ?";
         con.query(sql, [name, email], function (err, result) {
             if (err) throw err;
-            if (result.length > 0) return true;
-            return false;
+            if (result.length > 0) callback(null, true);
+            else callback(null, false);
         })
     },
-    checkValidLogData: function (email, pass) {
-        var sql = "SELECT 1 FROM users WHERE email = ? AND pswd = ?";
+    checkValidLogData: function (email, pass, callback) {
+        var sql = "SELECT * FROM users WHERE email = ? AND pswd = SHA1(?)";
         con.query(sql, [email, pass], function (err, result) {
-            if (err) throw err;
-            if (result.length > 0) return true;
-            return false;
+            if (err) callback(err, null);
+            else {
+                if (result.length > 0) callback(null, true);
+                else callback(null, false);
+            }
         });
     }
 };
