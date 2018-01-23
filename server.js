@@ -64,34 +64,42 @@ app.get('/register', (req, res) => {
 app.post('/login', function (req, res) {
 	sess = req.session;
 	sess.email = req.body.email;
-	sess.pass = req.body.password;
-	if (db.checkValidLogData(sess.email, sess.pass)) {
-		sess.isValid = true;
-		res.redirect('/main');
-	}
-	else {
-		model = { errorLogin: true };
-		sess.isValid = false;
-		res.render('/login', model)
-		// res.redirect('/errorlogin');//TODO okienko dialogowe
-	}
-
-	// print(sess.email, sess.pass);
+	sess.pass = req.body.pass;
+	print(sess.email);
+	print(sess.pass);
+	db.checkValidLogData(sess.email, sess.pass, function(err, data) {
+		if (err) throw err;
+		else {
+			if (data) {
+				sess.isValid = true;
+				res.redirect('/main');
+			}
+			else {
+				model = { errorLogin: true };
+				sess.isValid = false;
+				res.render('login.ejs', model);
+				// res.redirect('/errorlogin');//TODO okienko dialogowe
+			};
+		};
+	});
 });
 app.post('/register', function (req, res) {
 	name = req.body.name;
 	pass = req.body.pass;
 	email = req.body.email;
-	print(req);
-	if (!db.checkIfUserExists(name, email)) {
-		db.createUser(name, email, pass);
-		res.redirect('/login');
-	}
-	else {
-		// jakiś error
-		res.redirect('/');
-	}
-
+	db.checkIfUserExists(name, email, function(err, data) {
+		if (err) throw err;
+		else{
+			if (data) {
+				// jakiś error
+				res.redirect('/register');
+			}
+			else {
+				db.createUser(name, email, pass);
+				res.redirect('/login');
+			}
+		}
+	})
 });
 
 app.get('/main', (req, res) => {
@@ -197,9 +205,12 @@ setInterval(function () {
 	// print(socketList.map(a => a.id));//można wywalić
 }, 1000);
 
+// db.initDb();
+// db.useDb();
 // db.deleteDb();
 db.initDb();
 db.useDb();
+
 //db.createUser("anna", "cokolwiek", "123");
-db.showAllUsers();
+//db.showAllUsers();
 //db.checkIfUserExists("cokolwiek");
