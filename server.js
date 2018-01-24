@@ -65,8 +65,7 @@ app.post('/login', function (req, res) {
 	sess = req.session;
 	sess.email = req.body.email;
 	sess.pass = req.body.pass;
-	print(sess.email);
-	print(sess.pass);
+	print(req.body);
 	db.checkValidLogData(sess.email, sess.pass, function(err, data) {
 		if (err) throw err;
 		else {
@@ -83,18 +82,22 @@ app.post('/login', function (req, res) {
 		};
 	});
 });
+
 app.post('/register', function (req, res) {
 	name = req.body.name;
 	pass = req.body.pass;
 	email = req.body.email;
-	db.checkIfUserExists(name, email, function(err, data) {
+	print(req.body);
+	db.checkIfUserExists(name, email, pass, function(err, data) {
 		if (err) throw err;
 		else{
 			if (data) {
+				print("sth");
 				// jakiś error
 				res.redirect('/register');
 			}
 			else {
+				print("sth2");
 				db.createUser(name, email, pass);
 				res.redirect('/login');
 			}

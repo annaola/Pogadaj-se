@@ -49,9 +49,10 @@ module.exports = {
             print(result);
         })
     },
-    checkIfUserExists: function (name, email, callback) {
-        var sql = "SELECT 1 FROM users WHERE name = ? OR email = ?";
-        con.query(sql, [name, email], function (err, result) {
+    checkIfUserExists: function (name, email, pass, callback) {
+        var sql = "SELECT * FROM users WHERE email = ?";
+        con.query(sql, [email], function (err, result) {
+            print(result);
             if (err) throw err;
             if (result.length > 0) callback(null, true);
             else callback(null, false);
