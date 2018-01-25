@@ -189,9 +189,13 @@ io.on('connection', function (socket) {
 			// socket.rooms
 		});
 		socket.on('user list', function (data) {
-			// TODO: Dodać wyświetlanie użytkowników, którzy mają w sobie napis [data]
-			friends =  utils.friendList(sess.email);
-			socket.emit('user list', friends);
+			db.lookForEmail(data, function (err, data) {
+				if (err) throw err;
+				else {
+					usersEmails = data;
+					socket.emit('user list', usersEmails);
+				}
+			})
 		});
 	}
 	else {

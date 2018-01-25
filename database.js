@@ -57,7 +57,7 @@ module.exports = {
             // 1 - potwierdzone zaproszenie
             if (err) throw err;
             if (result.length > 0) {
-                row = JSON.parse(JSON.stringify(result[0]));
+                var row = JSON.parse(JSON.stringify(result[0]));
                 if (row.status == 0 && row.action_user_id != action_user_id) {
                     sql = "UPDATE relations SET status = 1 WHERE first_user_id = ?"
                     con.query(sql, [id1], function (err, result) {
@@ -120,14 +120,14 @@ module.exports = {
             }
         })
     },
-    checkValidLogData: function (email, pass, callback) {
-        var sql = "SELECT * FROM users WHERE email = ? AND pswd = SHA1(?)";
-        con.query(sql, [email, pass], function (err, result) {
+    lookForEmail: function (str, callback) {
+        var sql = "SELECT * FROM users WHERE email LIKE '%" + str + "%'"
+        con.query(sql, [str], function (err, result) {
             if (err) callback(err, null);
             else {
-                if (result.length > 0) callback(null, true);
-                else callback(null, false);
+                var rows = JSON.parse(JSON.stringify(result));
+                callback(null, rows);
             }
-        });
+        })
     }
 };
