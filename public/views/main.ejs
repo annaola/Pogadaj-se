@@ -84,7 +84,7 @@
             <h1>Witaj
                 <%= email %> na Pogadaj se! </h1>
             <h2>Na razie strona jest w budowie, ale możesz wypróbować super ficzery:</h2>
-            <button type="button"onclick="location.href='/chat';" class="btn btn-success btn-lg">Chat</button>
+            <button type="button" onclick="location.href='/chat';" class="btn btn-success btn-lg">Chat</button>
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addFriendModal">Dodaj znajomego</button>
             <button type="button" onclick="location.href='/logout';" class="btn btn-warning btn-lg">Wyloguj</button>
 
@@ -98,7 +98,7 @@
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form  action="/#TODO" method="POST">
+                <form action="/addFriend" method="POST">
                     <div class="modal-body">
                     <label for="friendEmail">Podaj email przyjaciela</label><br>
                     <input type="email" id=friendEmail name="friendEmail" placeholder="Email" list="emailList">
@@ -112,7 +112,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
-                    <button type="submit" class="btn btn-primary">Dodaj</button>
+                    <button type="submit" class="btn btn-primary" formtarget="_parent">Dodaj</button>
                 </div>
                 </form>
                 

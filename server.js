@@ -71,6 +71,7 @@ app.post('/login', function (req, res) {
 		else {
 			if (data) {
 				sess.isValid = true;
+				sess.userId = data;
 				res.redirect('/main');
 			}
 			else {
@@ -88,7 +89,7 @@ app.post('/register', function (req, res) {
 	pass = req.body.pass;
 	email = req.body.email;
 	print(req.body);
-	db.checkIfUserExists(name, email, pass, function(err, data) {
+	db.checkIfUserExists(email, pass, function(err, data) {
 		if (err) throw err;
 		else{
 			if (data) {
@@ -104,6 +105,49 @@ app.post('/register', function (req, res) {
 		}
 	})
 });
+
+app.get('/addFriend', (req, res) => {
+	res.redirect('/main');
+})
+
+app.post('/addFriend', (req, res) => {
+	friendEmail = req.body.friendEmail;
+	db.findUserByEmail(sess.email, function(err, userData) {
+		//print(userData);
+		if (err) throw err;
+		else {
+			if (userData) {
+				db.findUserByEmail(friendEmail, function(err, friendData) {
+					if (err) throw err;
+					else {
+						if (friendData) {
+							db.addFriend(userData.id, friendData.id, userData.id, function(err, data) {
+								con = data;
+								if (err) throw err;
+								else {
+									switch (con) {
+										case 0:
+											res.redirect('/main'); // TODO: nie możesz wysłać zaproszenia ponownie
+											break;
+										case 1:
+											res.redirect('/main'); // TODO: już jesteście znajomymi
+											break;
+										default:
+											res.redirect('/main');
+									}
+								}
+							}) 
+						}
+						else {
+							res.redirect('/main') // nie ma takiego użytkownika
+						}
+					}
+				})
+			}
+			else res.redirect('/main'); //błąd logowania?
+		}
+	})
+})
 
 app.get('/main', (req, res) => {
 	sess = req.session;
@@ -163,9 +207,14 @@ io.on('connection', function (socket) {
 		}
 
 		socket.on('friend list', function (data) {
-			var friendList = utils.friendList(sess.email);
-			socket.emit('friend list', friendList);
-			socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
+			db.listFriends(sess.userId, function(err, data) {
+				var friendsList = data;
+				print(friendsList);
+				socket.emit('friend list', friendsList);
+			})
+			// var friendList = utils.friendList(sess.email);
+			// socket.emit('friend list', friendList);
+			// socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
 		});
 
 		socket.on('diag', function (data) {
