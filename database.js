@@ -50,9 +50,9 @@ module.exports = {
             var temp = id1;
             id1 = id2;
             id2 = temp;
-        }ry(sql, [id1, id2], function (err, result) {
+        }
         var sql = "SELECT * FROM relations WHERE first_user_id = ? and second_user_id = ?";
-        con.que
+        con.query(sql, [id1, id2], function (err, result) {
             // 0 - niepotwierdzone zaproszenie
             // 1 - potwierdzone zaproszenie
             if (err) throw err;
