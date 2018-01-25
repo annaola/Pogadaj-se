@@ -50,11 +50,11 @@ module.exports = {
             var temp = id1;
             id1 = id2;
             id2 = temp;
-        }
+        }ry(sql, [id1, id2], function (err, result) {
         var sql = "SELECT * FROM relations WHERE first_user_id = ? and second_user_id = ?";
-        con.query(sql, [id1, id2], function (err, result) {
-            // 0 -> niepotwierdzone zaproszenie
-            // 1 -> potwierdzone zaproszenie
+        con.que
+            // 0 - niepotwierdzone zaproszenie
+            // 1 - potwierdzone zaproszenie
             if (err) throw err;
             if (result.length > 0) {
                 row = JSON.parse(JSON.stringify(result[0]));
@@ -93,7 +93,6 @@ module.exports = {
         con.query(sql, [name, email, pswd], function(err, result) {
             if (err) throw err;
             print("record inserted")
-
         });
     },
     showAllUsers: function () {

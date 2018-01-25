@@ -216,3 +216,4 @@ db.useDb();
 
 //db.createUser("anna", "cokolwiek", "123");
 //db.showAllUsers();
+//db.checkIfUserExists("cokolwiek");
