@@ -15,20 +15,19 @@ var print = console.log
 //     }
 // })
 
-var sequelize = require('sequelize-heroku').connect();
+var sequelize = null;
 
-if (sequelize) {
-    sequelize
-    .authenticate()
-    .then(() => {
-        var config = sequelize.connectionManager.config;
-        console.log('Connection has been established successfully.');
+if (process.env.HEROKU_POSTGRESQL_BRONZE_URL) {
+    // the application is executed on Heroku ... use the postgres database
+    sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_BRONZE_URL, {
+      dialect:  'postgres',
+      protocol: 'postgres',
+      port:     match[4],
+      host:     "https://pogadaj-se.herokuapp.com/",
+      logging:  true //false
     })
-    .catch(err => {
-        console.error('Unable to connect to the database:', err);
-    });
-}
-else {
+  } else {
+    // the application is executed on the local machine ... use mysql
     sequelize = new Sequelize('mysql', 'root', '1234', {
         host: 'localhost',
         dialect: 'mysql',
@@ -39,7 +38,7 @@ else {
             idle: 10000
         }
     })
-}
+  }
 
 const User = sequelize.define('user', {
     id: {
@@ -50,7 +49,7 @@ const User = sequelize.define('user', {
     name: {
         type: Sequelize.STRING
     },
-    email:{
+    email: {
         type: Sequelize.STRING,
         unique: true,
         allowNull: false
@@ -68,7 +67,7 @@ showAllUsers = function () {
     })
 }
 
-createUser = function(name, email, pass) {
+createUser = function (name, email, pass) {
     return User.create({
         name: name,
         email: email,
@@ -76,12 +75,12 @@ createUser = function(name, email, pass) {
     })
 }
 
-findUserByEmail = function(email, f) {
+findUserByEmail = function (email, f) {
     var user = User.findOne({
         where: {
             email: email
         }
-    }).then(user => { f(user)} );
+    }).then(user => { f(user) });
 }
 
 checkValidLogData = function (email, pass, f) {
@@ -93,8 +92,8 @@ checkValidLogData = function (email, pass, f) {
     }).then(user => { f(user) });
 }
 
-lookForEmail = function(em, f) {
-    var sql = '%'+ em +'%'
+lookForEmail = function (em, f) {
+    var sql = '%' + em + '%'
     var user = User.findAll({
         where: {
             email: {
@@ -127,7 +126,7 @@ showAllRelations = function () {
     })
 }
 
-addFriend = function(user, friend, f) {
+addFriend = function (user, friend, f) {
     var relation = Relation.findOne({
         where: {
             [Sequelize.Op.or]: [
@@ -141,7 +140,7 @@ addFriend = function(user, friend, f) {
                 },
             ]
         }
-    }).then(relation => { 
+    }).then(relation => {
         // console.log(relation);
         if (relation) {
             if (relation.status == 0) {
@@ -149,14 +148,14 @@ addFriend = function(user, friend, f) {
                     Relation.update({
                         status: 1
                     }, {
-                        where: {
-                            first_user_id: relation.first_user_id,
-                            second_user_id: relation.second_user_id
-                        }
-                    }).then( rel => {
-                        f(3);
-                        print("Zostaliście znajomymi");
-                    });
+                            where: {
+                                first_user_id: relation.first_user_id,
+                                second_user_id: relation.second_user_id
+                            }
+                        }).then(rel => {
+                            f(3);
+                            print("Zostaliście znajomymi");
+                        });
                 }
                 else {
                     f(1);
@@ -187,8 +186,9 @@ listFriends = function (id, f) {
         where: {
             [Sequelize.Op.or]: [
                 { first_user_id: id },
-                { second_user_id: id }
-            ]
+                { second_user_id: id },
+            ],
+            status: 1
         }
     }).then(relations => {
         var friendsIds = [];
@@ -200,7 +200,7 @@ listFriends = function (id, f) {
             where: {
                 id: friendsIds
             }
-        }).then(users => { f(users)} )
+        }).then(users => { f(users) })
     })
 }
 
