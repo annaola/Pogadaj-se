@@ -66,22 +66,19 @@ app.post('/login', function (req, res) {
 	sess.email = req.body.email;
 	sess.pass = req.body.pass;
 	print(req.body);
-	db.checkValidLogData(sess.email, sess.pass, function(err, data) {
-		if (err) throw err;
+	db.checkValidLogData(sess.email, sess.pass, data => {
+		if (data) {
+			sess.isValid = true;
+			sess.userId = data.id;
+			res.redirect('/main');
+		}
 		else {
-			if (data) {
-				sess.isValid = true;
-				sess.userId = data;
-				res.redirect('/main');
-			}
-			else {
-				model = { errorLogin: true };
-				sess.isValid = false;
-				res.render('login.ejs', model);
-				// res.redirect('/errorlogin');//TODO okienko dialogowe
-			};
-		};
-	});
+			model = { errorLogin: true };
+			sess.isValid = false;
+			res.render('login.ejs', model);
+			// res.redirect('/errorlogin');//TODO okienko dialogowe
+		}
+	})
 });
 
 app.post('/register', function (req, res) {
@@ -89,63 +86,40 @@ app.post('/register', function (req, res) {
 	pass = req.body.pass;
 	email = req.body.email;
 	print(req.body);
-	db.checkIfUserExists(email, pass, function(err, data) {
-		if (err) throw err;
-		else{
-			if (data) {
-				print("sth");
-				// jakiś error
-				res.redirect('/register');
-			}
-			else {
-				print("sth2");
-				db.createUser(name, email, pass);
-				res.redirect('/login');
-			}
+	db.findUserByEmail(email, data => {
+		if (data) {
+			//TODO: jakiś error
+			res.redirect('/register');
+		}
+		else {
+			db.createUser(name, email, pass);
+			print("User created");
+			res.redirect('/login');
 		}
 	})
 });
 
-app.get('/addFriend', (req, res) => {
-	res.redirect('/main');
-})
-
 app.post('/addFriend', (req, res) => {
 	friendEmail = req.body.friendEmail;
-	db.findUserByEmail(sess.email, function(err, userData) {
-		//print(userData);
-		if (err) throw err;
-		else {
-			if (userData) {
-				db.findUserByEmail(friendEmail, function(err, friendData) {
-					if (err) throw err;
-					else {
-						if (friendData) {
-							db.addFriend(userData.id, friendData.id, userData.id, function(err, data) {
-								con = data;
-								if (err) throw err;
-								else {
-									switch (con) {
-										case 0:
-											res.redirect('/main'); // TODO: nie możesz wysłać zaproszenia ponownie
-											break;
-										case 1:
-											res.redirect('/main'); // TODO: już jesteście znajomymi
-											break;
-										default:
-											res.redirect('/main');
-									}
-								}
-							}) 
-						}
-						else {
-							res.redirect('/main') // nie ma takiego użytkownika
-						}
-					}
-				})
+	var userId = sess.userId;
+	db.findUserByEmail(friendEmail, friendData => {
+		var friendId = friendData.id;
+		db.addFriend(userId, friendId, data => {
+			switch (data) {
+				case (0):
+					res.redirect('/main'); // TODO: wysłano zaproszenie						
+					break;
+				case (1):
+					res.redirect('/main'); // TODO: nie możesz wysłać zaproszenia ponownie						
+					break;
+				case (2):
+					res.redirect('/main'); // TODO: już jesteście znajomymi
+					break;
+				case (3):
+					res.redirect('/main'); // TODO: Zostaliście znajomymi			
+					break;
 			}
-			else res.redirect('/main'); //błąd logowania?
-		}
+		})
 	})
 })
 
@@ -207,13 +181,9 @@ io.on('connection', function (socket) {
 		}
 
 		socket.on('friend list', function (data) {
-			db.listFriends(sess.userId, function(err, data) {
-				var friendsList = data;
-				print(friendsList);
-				socket.emit('friend list', friendsList);
+			db.listFriends(sess.userId, friendsList => {
+			socket.emit('friend list', friendsList);
 			})
-			// var friendList = utils.friendList(sess.email);
-			// socket.emit('friend list', friendList);
 			// socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
 		});
 
@@ -230,27 +200,23 @@ io.on('connection', function (socket) {
 			}
 			socket.join(room);
 			socket.room = room;
-			socket.emit('chat message', {value: "joined " + room, email: sess.email});//diagnostic
+			socket.emit('chat message', { value: "joined " + room, email: sess.email });//diagnostic
 		});
 
 		socket.on('chat message', function (data) {
-			io.to(socket.room).emit('chat message',  data);
+			io.to(socket.room).emit('chat message', data);
 			// socket.rooms
 		});
 		socket.on('user list', function (data) {
-			db.lookForEmail(data, function (err, data) {
-				if (err) throw err;
-				else {
-					usersEmails = data;
-					socket.emit('user list', usersEmails);
-				}
-			})
+			db.lookForEmail(data, emails => {
+				print(emails);
+				socket.emit('user list', emails);
+			});
 		});
 	}
 	else {
 		socket.emit('diag', 'notLogged');
 	}
-
 });
 
 
@@ -260,13 +226,3 @@ setInterval(function () {
 	io.emit('time', date.toString());
 	// print(socketList.map(a => a.id));//można wywalić
 }, 1000);
-
-// db.initDb();
-// db.useDb();
-// db.deleteDb();
-db.initDb();
-db.useDb();
-
-//db.createUser("anna", "cokolwiek", "123");
-//db.showAllUsers();
-//db.checkIfUserExists("cokolwiek");
