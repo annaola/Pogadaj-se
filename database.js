@@ -2,28 +2,44 @@ var mysql = require('mysql');
 const Sequelize = require('sequelize');
 var sha1 = require('sha1');
 var Promise = require("bluebird");
-
 var print = console.log
 
-const sequelize = new Sequelize('mysql', 'root', '1234', {
-    host: 'localhost',
-    dialect: 'mysql',
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-    }
-})
+// const sequelize = new Sequelize('mysql', 'root', '1234', {
+//     host: 'localhost',
+//     dialect: 'mysql',
+//     pool: {
+//         max: 5,
+//         min: 0,
+//         acquire: 30000,
+//         idle: 10000
+//     }
+// })
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+var sequelize = require('sequelize-heroku').connect();
+
+if (sequelize) {
+    sequelize
+    .authenticate()
+    .then(() => {
+        var config = sequelize.connectionManager.config;
+        console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
+}
+else {
+    sequelize = new Sequelize('mysql', 'root', '1234', {
+        host: 'localhost',
+        dialect: 'mysql',
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+        }
+    })
+}
 
 const User = sequelize.define('user', {
     id: {
