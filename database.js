@@ -28,9 +28,7 @@ if (process.env.DATABASE_URL) {
         logging: true, //false
         pool: {
             max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000
+            min: 0
         }
     })
 } else {
