@@ -23,7 +23,7 @@ if (process.env.DATABASE_URL) {
     sequelize = new Sequelize(process.env.PG_DB, process.env.PG_USER, process.env.PG_PASSWORD, {
         dialect: 'postgres',
         protocol: 'postgres',
-        port: process.env.PORT,
+        port: null,
         host: process.env.HOST,
         logging: true, //false
         pool: {
