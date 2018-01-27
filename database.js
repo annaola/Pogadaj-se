@@ -279,6 +279,9 @@ const Room = sequelize.define('room', {
     member: {
         type: Sequelize.UUID,
     },
+    lastUsed: {
+        type: Sequelize.DATE
+    }
 })
 
 Room.sync() //{force: "true"}
@@ -322,6 +325,16 @@ addMember = function (name, member) {
     })
 }
 
+lastUsedUpdate = function (room, date) {
+    Room.update({
+        lastUsed: date
+    }, {
+            where: {
+                name: room
+            }
+        })
+}
+
 module.exports = {
     createUser: createUser,
     showAllUsers: showAllUsers,
@@ -340,5 +353,6 @@ module.exports = {
 
     showAllRooms: showAllRooms,
     createRoom: createRoom,
-    addMember: addMember
+    addMember: addMember,
+    lastUsedUpdate: lastUsedUpdate
 }
