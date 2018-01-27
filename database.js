@@ -21,13 +21,19 @@ if (process.env.DATABASE_URL) {
     print("cos");
     // the application is executed on Heroku ... use the postgres database
     sequelize = new Sequelize(process.env.PG_DB, process.env.PG_USER, process.env.PG_PASSWORD, {
-      dialect:  'postgres',
-      protocol: 'postgres',
-      port:     process.env.PORT,
-      host:     process.env.HOST,
-      logging:  true //false
+        dialect: 'postgres',
+        protocol: 'postgres',
+        port: process.env.PORT,
+        host: process.env.HOST,
+        logging: true, //false
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
+        }
     })
-  } else {
+} else {
     // the application is executed on the local machine ... use mysql
     sequelize = new Sequelize('mysql', 'root', '1234', {
         host: 'localhost',
@@ -39,7 +45,7 @@ if (process.env.DATABASE_URL) {
             idle: 10000
         }
     })
-  }
+}
 
 const User = sequelize.define('user', {
     id: {
