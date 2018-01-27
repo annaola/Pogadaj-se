@@ -72,6 +72,14 @@ createUser = function (name, email, pass) {
     })
 }
 
+findUserById = function (id, f) {
+    var user = User.findOne({
+        where: {
+            id: id
+        }
+    }).then(user => { f(user) });
+}
+
 findUserByEmail = function (email, f) {
     var user = User.findOne({
         where: {
@@ -247,6 +255,15 @@ createMessage = function (room, author, value) {
     })
 }
 
+showRoomMessages = function (room, f) {
+    Message.findAll({
+        where: {
+            room: room
+        },
+        order: [["createdAt", "ASC"]]
+    }).then(messages => { f(messages) })
+}
+
 const Room = sequelize.define('room', {
     id: {
         type: Sequelize.UUID,
@@ -308,6 +325,7 @@ addMember = function (name, member) {
 module.exports = {
     createUser: createUser,
     showAllUsers: showAllUsers,
+    findUserById: findUserById,
     findUserByEmail: findUserByEmail,
     checkValidLogData: checkValidLogData,
     lookForEmail: lookForEmail,
@@ -318,6 +336,7 @@ module.exports = {
 
     showAllMessages: showAllMessages,
     createMessage: createMessage,
+    showRoomMessages: showRoomMessages,
 
     showAllRooms: showAllRooms,
     createRoom: createRoom,
