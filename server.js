@@ -119,6 +119,7 @@ app.post('/addFriend', (req, res) => {
 					res.redirect('/main'); // TODO: już jesteście znajomymi
 					break;
 				case (3):
+					db.createRoom(userId, [friendId]);
 					res.redirect('/main'); // TODO: Zostaliście znajomymi			
 					break;
 			}
@@ -208,6 +209,7 @@ io.on('connection', function (socket) {
 		});
 
 		socket.on('chat message', function (data) {
+			db.createMessage(socket.room, sess.userId, data.value);
 			io.to(socket.room).emit('chat message', data);
 			// socket.rooms
 		});
