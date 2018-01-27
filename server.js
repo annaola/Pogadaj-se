@@ -226,6 +226,7 @@ io.on('connection', function (socket) {
 
 		socket.on('chat message', function (data) {
 			db.createMessage(socket.room, sess.userId, data.value);
+			db.lastUsedUpdate(socket.room, new Date());
 			io.to(socket.room).emit('chat message', data);
 			// socket.rooms
 		});
