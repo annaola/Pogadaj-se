@@ -10,7 +10,7 @@ var upload = multer({ dest: 'uploads/' })
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var MemoryStore = require('session-memory-store')(session);
+var FileStore = require('session-file-store')(session);
 var socket = require('socket.io');
 var print = console.log
 
@@ -22,7 +22,6 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-//app.set('trust proxy', 1);
 app.use(session({ secret: 'ssshhhhh', saveUninitialized: true, resave: true }));
 
 var sess = {};
@@ -32,7 +31,7 @@ var io = socket(server);
 // nested sessios
 app.use('/sessions', session({
 	secret: 'keyboard cat',
-	store: new MemoryStore(),
+	store: new FileStore,
 	resave: false,
 	saveUninitialized: true,
 	cookie: { maxAge: 1000 * 60 } //60 sec session
