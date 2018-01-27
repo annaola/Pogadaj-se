@@ -4,7 +4,7 @@ Projrekt na WEPPO
 
 - [ ] 3 Bazy danych:
     - [x] Na użytkowników (email, hasło);
-    - [ ] Na Znajomych (id1, id2);
+    - [x] Na Znajomych (id1, id2);
     - [ ] Na Wiadomości (id pokoju, id usera, treść, id wiadomości);
     - [ ] (?) Na pokoje;
 
