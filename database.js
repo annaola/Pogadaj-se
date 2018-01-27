@@ -154,8 +154,17 @@ addFriend = function (user, friend, f) {
                         status: 1
                     }, {
                             where: {
-                                first_user_id: relation.first_user_id,
-                                second_user_id: relation.second_user_id
+                                [Sequelize.Op.or]: [
+                                    {
+                                        first_user_id: relation.first_user_id,
+                                        second_user_id: relation.second_user_id
+                                    },
+                                    {
+                                        first_user_id: relation.second_user_id,
+                                        second_user_id: relation.first_user_id
+                                    }
+                                ]
+
                             }
                         }).then(rel => {
                             f(3);
