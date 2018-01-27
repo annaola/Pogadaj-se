@@ -188,7 +188,7 @@ io.on('connection', function (socket) {
 			db.listFriends(sess.userId, friendsList => {
 			socket.emit('friend list', friendsList);
 			})
-			// socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
+			socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
 		});
 
 		socket.on('diag', function (data) {
