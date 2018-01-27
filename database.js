@@ -4,17 +4,6 @@ var sha1 = require('sha1');
 var Promise = require("bluebird");
 var print = console.log
 
-// const sequelize = new Sequelize('mysql', 'root', '1234', {
-//     host: 'localhost',
-//     dialect: 'mysql',
-//     pool: {
-//         max: 5,
-//         min: 0,
-//         acquire: 30000,
-//         idle: 10000
-//     }
-// })
-
 var sequelize = null;
 
 if (process.env.DATABASE_URL) {

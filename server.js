@@ -10,7 +10,7 @@ var upload = multer({ dest: 'uploads/' })
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var FileStore = require('session-file-store')(session);
+var MemoryStore = require('session-memory-store')(session);
 var socket = require('socket.io');
 var print = console.log
 
@@ -32,7 +32,7 @@ var io = socket(server);
 // nested sessios
 app.use('/sessions', session({
 	secret: 'keyboard cat',
-	store: new RedisStore(),
+	store: new MemoryStore(),
 	resave: false,
 	saveUninitialized: true,
 	cookie: { maxAge: 1000 * 60 } //60 sec session
