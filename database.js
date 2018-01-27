@@ -25,11 +25,7 @@ if (process.env.DATABASE_URL) {
         protocol: 'postgres',
         port: process.env.PORT,
         host: process.env.HOST,
-        logging: true, //false
-        pool: {
-            max: 5,
-            min: 0
-        }
+        logging: false, //false
     })
 } else {
     // the application is executed on the local machine ... use mysql
