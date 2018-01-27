@@ -65,7 +65,7 @@ app.post('/login', function (req, res) {
 	sess = req.session;
 	sess.email = req.body.email;
 	sess.pass = req.body.pass;
-	print(req.body);
+	//print(req.body);
 	db.checkValidLogData(sess.email, sess.pass, data => {
 		if (data) {
 			sess.isValid = true;
@@ -100,10 +100,13 @@ app.post('/register', function (req, res) {
 });
 
 app.post('/addFriend', (req, res) => {
+	sess = req.session;
 	friendEmail = req.body.friendEmail;
 	var userId = sess.userId;
 	db.findUserByEmail(friendEmail, friendData => {
+		//print("user: " + userId);
 		var friendId = friendData.id;
+		//print("friend: " + friendId);
 		db.addFriend(userId, friendId, data => {
 			switch (data) {
 				case (0):
@@ -148,6 +151,7 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('/chat', (req, res) => {
+	sess = req.session;
 	if (sess.isValid) {
 		model = { email: sess.email }
 		res.render('chat', model);
