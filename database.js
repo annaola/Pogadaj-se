@@ -24,7 +24,7 @@ if (process.env.DATABASE_URL) {
       dialect:  'postgres',
       protocol: 'postgres',
       port:     process.env.PORT,
-      host:     pogadaj-se.herokuapp.com,
+      host:     process.env.HOST,
       logging:  true //false
     })
   } else {
