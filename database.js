@@ -18,12 +18,13 @@ var print = console.log
 var sequelize = null;
 
 if (process.env.HEROKU_POSTGRESQL_BRONZE_URL) {
+    print("cos");
     // the application is executed on Heroku ... use the postgres database
     sequelize = new Sequelize(process.env.PG_DB, process.env.PG_USER, process.env.PG_PASSWORD, {
       dialect:  'postgres',
       protocol: 'postgres',
       port:     match[4],
-      host:     process.env.PG_HOST,
+      host:     pogadaj-se.herokuapp.com,
       logging:  true //false
     })
   } else {
