@@ -20,14 +20,9 @@ var sequelize = null;
 if (process.env.DATABASE_URL) {
     print("cos");
     // the application is executed on Heroku ... use the postgres database
-    sequelize = new Sequelize(process.env.PG_DB, process.env.PG_USER, process.env.PG_PASSWORD, {
-        dialect: 'postgres',
-        protocol: 'postgres',
-        port: process.env.PORT,
-        host: process.env.HOST,
-        logging: false, //false
-    })
-} else {
+    sequelize = new Sequelize(process.env.DATABASE_URL)
+}
+else {
     // the application is executed on the local machine ... use mysql
     sequelize = new Sequelize('mysql', 'root', '1234', {
         host: 'localhost',
@@ -42,13 +37,13 @@ if (process.env.DATABASE_URL) {
 }
 
 sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+    .authenticate()
+    .then(() => {
+        console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
 
 const User = sequelize.define('user', {
     id: {
