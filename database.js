@@ -2,6 +2,7 @@ var mysql = require('mysql');
 const Sequelize = require('sequelize');
 var sha1 = require('sha1');
 var Promise = require("bluebird");
+var utils = require('./utils.js');
 var print = console.log
 
 var sequelize = null;
@@ -33,6 +34,8 @@ sequelize
     .catch(err => {
         console.error('Unable to connect to the database:', err);
     });
+
+//sequelize.query("ALTER DATABASE mysql CONVERT TO CHARACTER SET utf8;")
 
 const User = sequelize.define('user', {
     id: {
@@ -207,6 +210,101 @@ listFriends = function (id, f) {
     })
 }
 
+const Message = sequelize.define('message', {
+    id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
+    },
+    room: {
+        type: Sequelize.TEXT
+    },
+    // parentId: {
+    //     type: Sequelize.UUID
+    // },
+    author: {
+        type: Sequelize.UUID,
+    },
+    value: {
+        type: Sequelize.TEXT
+    },
+})
+
+Message.sync() //{force: "true"}
+
+showAllMessages = function () {
+    Message.findAll().then(messages => {
+        console.log(messages);
+    })
+}
+
+createMessage = function (room, author, value) {
+    return Message.create({
+        //parentId: parentId,
+        room: room,
+        author: author,
+        value: value
+    })
+}
+
+const Room = sequelize.define('room', {
+    id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
+    },
+    name: {
+        type: Sequelize.TEXT,
+    },
+    // parentId: {
+    //     type: Sequelize.UUID
+    // },
+    member: {
+        type: Sequelize.UUID,
+    },
+})
+
+Room.sync() //{force: "true"}
+
+showAllRooms = function () {
+    Room.findAll().then(rooms => {
+        console.log(rooms);
+    })
+}
+
+createRoom = function (user, members) {
+    User.findById(user).then(userMail => {
+        User.findAll({
+            where: {
+                id: members
+            }
+        }).then(membersMails => {
+            var mails = [];
+            membersMails.forEach(mem => {
+                mails.push(membersMails.mail);
+            })
+            name = utils.makeRoomName([userMail.mail].concat(mails.sort()));
+            Room.create({
+                name: name,
+                member: user
+            })
+            members.forEach(member => {
+                Room.create({
+                    name: name,
+                    member: member
+                });
+            })
+        })
+    })
+}
+
+addMember = function (name, member) {
+    return Room.create({
+        name: name,
+        member: member
+    })
+}
+
 module.exports = {
     createUser: createUser,
     showAllUsers: showAllUsers,
@@ -216,5 +314,12 @@ module.exports = {
 
     showAllRelations: showAllRelations,
     addFriend: addFriend,
-    listFriends: listFriends
+    listFriends: listFriends,
+
+    showAllMessages: showAllMessages,
+    createMessage: createMessage,
+
+    showAllRooms: showAllRooms,
+    createRoom: createRoom,
+    addMember: addMember
 }
