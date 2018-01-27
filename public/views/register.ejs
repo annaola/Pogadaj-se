@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Zaloguj</title>
+    <title>Zarejestruj się</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
         crossorigin="anonymous">
@@ -60,7 +60,7 @@
             <div class="col">
             </div>
             <div class="col">
-                <form class="form-signin"  action="/login" method="POST">
+                <form class="register-form"  action="/register" method="POST">
                     <img class="mb-4" src="http://icons.iconarchive.com/icons/froyoshark/enkel/512/iMessage-icon.png" alt="" width="72" height="72">
                     <h1 class="h3 mb-3 font-weight-normal">Zarejestruj się</h1>
 
@@ -71,12 +71,12 @@
                     <input type="email" id="inputEmail" class="form-control" placeholder="Adres email" name="email" required>
 
                     <label for="inputPassword" class="sr-only">Hasło</label>
-                    <input type="password" id="inputPassword" class="form-control" placeholder="Hasło" required>
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Hasło" name="pass" required>
 
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Zarejestruj</button>
                     <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
-                    <p class="message">Nie masz konta?
-                            <a href="/register">Zarejestruj się!</a>
+                    <p class="message">Masz już konto?
+                            <a href="/login">Zaloguj się!</a>
                     </p>
                 </form>
             </div>

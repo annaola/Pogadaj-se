@@ -2,6 +2,7 @@ var http = require('http');
 var express = require('express');
 var url = require('url')
 var utils = require('./utils.js');
+var db = require('./database.js');
 var https = require('https');
 var fs = require('fs');
 var multer = require('multer')
@@ -63,25 +64,64 @@ app.get('/register', (req, res) => {
 app.post('/login', function (req, res) {
 	sess = req.session;
 	sess.email = req.body.email;
-	sess.pass = req.body.password;
-	if (utils.isValid(sess.email, sess.pass)) {
-		sess.isValid = true;
-		res.redirect('/main');
-	}
-	else {
-		model = { errorLogin: true };
-		sess.isValid = false;
-		res.render('/login', model)
-		// res.redirect('/errorlogin');//TODO okienko dialogowe
-	}
-
-	// print(sess.email, sess.pass);
+	sess.pass = req.body.pass;
+	print(req.body);
+	db.checkValidLogData(sess.email, sess.pass, data => {
+		if (data) {
+			sess.isValid = true;
+			sess.userId = data.id;
+			res.redirect('/main');
+		}
+		else {
+			model = { errorLogin: true };
+			sess.isValid = false;
+			res.render('login.ejs', model);
+			// res.redirect('/errorlogin');//TODO okienko dialogowe
+		}
+	})
 });
+
 app.post('/register', function (req, res) {
-	//TODO
-	res.redirect('/main');
-
+	name = req.body.name;
+	pass = req.body.pass;
+	email = req.body.email;
+	print(req.body);
+	db.findUserByEmail(email, data => {
+		if (data) {
+			//TODO: jakiś error
+			res.redirect('/register');
+		}
+		else {
+			db.createUser(name, email, pass);
+			print("User created");
+			res.redirect('/login');
+		}
+	})
 });
+
+app.post('/addFriend', (req, res) => {
+	friendEmail = req.body.friendEmail;
+	var userId = sess.userId;
+	db.findUserByEmail(friendEmail, friendData => {
+		var friendId = friendData.id;
+		db.addFriend(userId, friendId, data => {
+			switch (data) {
+				case (0):
+					res.redirect('/main'); // TODO: wysłano zaproszenie						
+					break;
+				case (1):
+					res.redirect('/main'); // TODO: nie możesz wysłać zaproszenia ponownie						
+					break;
+				case (2):
+					res.redirect('/main'); // TODO: już jesteście znajomymi
+					break;
+				case (3):
+					res.redirect('/main'); // TODO: Zostaliście znajomymi			
+					break;
+			}
+		})
+	})
+})
 
 app.get('/main', (req, res) => {
 	sess = req.session;
@@ -141,9 +181,10 @@ io.on('connection', function (socket) {
 		}
 
 		socket.on('friend list', function (data) {
-			var friendList = utils.friendList(sess.email);
-			socket.emit('friend list', friendList);
-			socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
+			db.listFriends(sess.userId, friendsList => {
+			socket.emit('friend list', friendsList);
+			})
+			// socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
 		});
 
 		socket.on('diag', function (data) {
@@ -159,23 +200,23 @@ io.on('connection', function (socket) {
 			}
 			socket.join(room);
 			socket.room = room;
-			socket.emit('chat message', {value: "joined " + room, email: sess.email});//diagnostic
+			socket.emit('chat message', { value: "joined " + room, email: sess.email });//diagnostic
 		});
 
 		socket.on('chat message', function (data) {
-			io.to(socket.room).emit('chat message',  data);
+			io.to(socket.room).emit('chat message', data);
 			// socket.rooms
 		});
 		socket.on('user list', function (data) {
-			// TODO: Dodać wyświetlanie użytkowników, którzy mają w sobie napis [data]
-			friends =  utils.friendList(sess.email);
-			socket.emit('user list', friends);
+			db.lookForEmail(data, emails => {
+				print(emails);
+				socket.emit('user list', emails);
+			});
 		});
 	}
 	else {
 		socket.emit('diag', 'notLogged');
 	}
-
 });
 
 

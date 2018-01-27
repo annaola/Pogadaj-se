@@ -1,8 +1,7 @@
+
+var db = require('./database.js');
+
 module.exports = {
-    isValid: function (email, password) {
-        // TODO
-        return true;
-    },
     friendList: function (email) {
         // TODO
         //można założyć, że maile są unikalne, mogą być naszym id na razie
