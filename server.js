@@ -223,6 +223,15 @@ io.on('connection', function (socket) {
 				socket.emit('user list', emails);
 			});
 		});
+		socket.on("old msgs", function (data){
+			var number = data.number;
+			var lastNumber = data.lastNumber;
+			function getOldMsgs(number, lastNumber){
+				return {number: number, list:[{ value: "old msg", email: "sender's email" }]}
+			};
+			oldMsgs = getOldMsgs(number, lastNumber);
+			socket.emit("old msgs", oldMsgs);
+		});
 	}
 	else {
 		socket.emit('diag', 'notLogged');
