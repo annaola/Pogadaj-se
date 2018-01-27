@@ -32,7 +32,7 @@ var io = socket(server);
 // nested sessios
 app.use('/sessions', session({
 	secret: 'keyboard cat',
-	store: new FileStore(),
+	store: new RedisStore(),
 	resave: false,
 	saveUninitialized: true,
 	cookie: { maxAge: 1000 * 60 } //60 sec session
