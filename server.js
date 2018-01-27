@@ -101,7 +101,9 @@ app.post('/register', function (req, res) {
 
 app.post('/addFriend', (req, res) => {
 	friendEmail = req.body.friendEmail;
+	var type = req.body.type; //typ; 1:zatwierdzono, 2: odrzucono (zaproszenie)
 	var userId = sess.userId;
+	
 	db.findUserByEmail(friendEmail, friendData => {
 		var friendId = friendData.id;
 		db.addFriend(userId, friendId, data => {
@@ -126,7 +128,11 @@ app.post('/addFriend', (req, res) => {
 app.get('/main', (req, res) => {
 	sess = req.session;
 	if (sess.isValid) {
-		model = { email: sess.email }
+		friendRequestsList = [{id: 0, email: "example@example.op", name: "Jan Pancerz VII"}, //
+								{id: 1, email: "michal.mar3@gmailc.om", name: "1stain"}]
+		model = { email: sess.email,
+				  userId: sess.userId, 
+				  friendRequestsList: friendRequestsList }
 		res.render('main', model);
 	}
 	else {

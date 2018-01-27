@@ -7,15 +7,43 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pogadaj se!</title>
     <script src="/socket.io/socket.io.js"></script>
-    
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>  
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 
     <link rel="stylesheet" type="text/css" href="styles/style.css">
     <script> 
+        function sendAnswer(friendEmail, type, boxId){
+            $.post("/addFriend",        
+            {
+                userId: '<%= userId %>', //TODO prawdopodobnie do usunięcia
+                friendEmail: friendEmail,
+                type: type
+            });
+            box = document.getElementById(boxId);
+            if(type == 1){
+                box.innerHTML = `
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Sukces!</strong> Jesteście teraz znajomymi!
+                </div>`;
+            }
+            else{
+                box.innerHTML = `
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    Zaproszenie zostało odrzucone.
+                </div>`;
+            }
+            
+        }
         window.addEventListener('load', function () {
             var socket = io();
             addFriendEmail = document.getElementById('friendEmail');
@@ -26,11 +54,11 @@
 
             socket.on('user list', function (data) {
                 var list = document.getElementById('emailSelect');
-                console.log(data, data.email, data.value)
+                // console.log(data, data.email, data.value)
                 options = ""
                 for( i in data){
-                    options += '<option>' + data[i].email + '</p>\n';
-                    console.log(data[i])
+                    options +=`<option>${data[i].name} (${data[i].email})\n`;
+                    // console.log(data[i])
                 }
                 list.innerHTML = options;
 
@@ -102,10 +130,7 @@
                     <input type="email" id=friendEmail name="friendEmail" placeholder="Email" list="emailList">
                     <datalist id="emailList">
                     <select id="emailSelect">
-                        
-
                     </select>
-                        
                     </datalist>
                 </div>
                 <div class="modal-footer">
@@ -113,14 +138,41 @@
                     <button type="submit" class="btn btn-primary" formtarget="_parent">Dodaj</button>
                 </div>
                 </form>
-                
                 </div>
             </div>
             </div>
-            
         </div>
+        <%if(friendRequestsList.length){%>
+            <div class="my-3 p-3 bg-white rounded box-shadow col-6">
+                <h6 class="border-bottom border-gray pb-2 mb-0">Zaproszenia do grona znajomych</h6>
+                <div id="requestBox">
+                <% for(var i in friendRequestsList) {%>
+                    <div class="media text-muted pt-3" id="frndDv<%= friendRequestsList[i].id %>">
+                        <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+                        <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                            <strong class="text-gray-dark"><%= friendRequestsList[i].name %></strong>
+                            <span>
+                                <button type="button" 
+                                        onclick="sendAnswer('<%= friendRequestsList[i].email %>', 1, 'frndDv<%= friendRequestsList[i].id %>'); " 
+                                        class="btn btn-outline-success btn-sm">Zatwierdź</button>
+                                <button type="button" 
+                                        onclick="sendAnswer('<%= friendRequestsList[i].email %>', 2, 'frndDv<%= friendRequestsList[i].id %>'); " 
+                                        class="btn btn-outline-danger btn-sm">Odrzuć</button>
+                            </span>
+                            
+                            </div>
+                            <span class="d-block"><%= friendRequestsList[i].email %></span>
+                        </div>
+                    </div>
+                <% } %>
+                </div>
+                <small class="d-block text-right mt-3">
+                <a href="#">All suggestions</a>
+                </small>
+            </div>
+        <%}%>
     </div>
-
 </body>
 
 </html>
