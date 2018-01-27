@@ -23,7 +23,7 @@ if (process.env.DATABASE_URL) {
     sequelize = new Sequelize(process.env.PG_DB, process.env.PG_USER, process.env.PG_PASSWORD, {
       dialect:  'postgres',
       protocol: 'postgres',
-      port:     match[4],
+      port:     process.env.PORT,
       host:     pogadaj-se.herokuapp.com,
       logging:  true //false
     })
