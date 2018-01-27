@@ -22,6 +22,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+//app.set('trust proxy', 1);
 app.use(session({ secret: 'ssshhhhh', saveUninitialized: true, resave: true }));
 
 var sess = {};
@@ -31,7 +32,7 @@ var io = socket(server);
 // nested sessios
 app.use('/sessions', session({
 	secret: 'keyboard cat',
-	store: new FileStore,
+	store: new FileStore(),
 	resave: false,
 	saveUninitialized: true,
 	cookie: { maxAge: 1000 * 60 } //60 sec session
