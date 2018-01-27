@@ -212,6 +212,16 @@ io.on('connection', function (socket) {
 			socket.join(room);
 			socket.room = room;
 			socket.emit('chat message', { value: "joined " + room, email: sess.email });//diagnostic
+			db.showRoomMessages(room, messages => {
+				messages.forEach(element => {
+					db.findUserById(element.author, user => {
+						socket.emit('chat message', {
+							value: element.value,
+							email: user.email
+						})
+					})
+				});
+			})
 		});
 
 		socket.on('chat message', function (data) {
