@@ -97,6 +97,9 @@
             //wyświetlanie wiadomości:
             socket.on('chat message', function (data) {
                 var msg = document.getElementById('messages');
+                // console.log(data, data.email, data.value)
+                var text = document.createTextNode('<p>Stuff</p>');
+                console.log(text)
                 if(data.email == '<%= email %>'){
                     msg.innerHTML += '<p class="incmsg">' + htmlEntities(data.value) + '</p>';
                 }
@@ -112,9 +115,9 @@
                     for (let index = 0; index < txtmessage.value.length - 500; index+=0) {
 	                    var msg_part = txtmessage.value.substring(0,500);	
                         txtmessage.value = txtmessage.value.substring(500,txtmessage.value.length);	
-                        socket.emit('chat message', {value: htmlEntities(msg_part), email: '<%= email %>'});
+                        socket.emit('chat message', {value: msg_part, email: '<%= email %>'});
                     }
-                    socket.emit('chat message', {value: htmlEntities(txtmessage.value.substring(0,1000)), email: '<%= email %>'});
+                    socket.emit('chat message', {value: txtmessage.value.substring(0,1000), email: '<%= email %>'});
                     txtmessage.value = "";
                 }
             };
@@ -212,7 +215,7 @@
                     
                 </div>
                 <div id=inputMessages>
-                    <input type='text' style="text-align: right;" id='txtmessage' />
+                    <input type='text' style="text-align: right;" id='txtmessage' maxlength="500"/>
                     <input type="button" class= "btn btn-primary btn-block" id='btsend' value="Wyślij" />
                 </div>
                 
