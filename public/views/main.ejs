@@ -45,6 +45,14 @@
         }
         window.addEventListener('load', function () {
             var socket = io();
+            socket.on('diag', function (data) {
+                if (data = "notLogged") {
+                    var b = document.getElementById('inBody');
+                    b.innerHTML = "<h1 class='error'>Zaloguj się!</h1>";
+                    alert("Musisz się zalogować!");
+                    window.location.href = '../';
+                }
+            })
             addFriendEmail = document.getElementById('friendEmail');
             addFriendEmail.addEventListener('input', function(){
                 // alert(addFriendEmail.value);

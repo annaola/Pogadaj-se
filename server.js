@@ -245,19 +245,19 @@ io.on('connection', function (socket) {
 				socket.emit('user list', emails);
 			});
 		});
-		socket.on("old msgs", function (data) {
-			var number = data.number;
-			var lastNumber = data.lastNumber;
-			// db.showRoomMessagesXtoY(socket.room, lastNumber, number, oldMsgs => {
-			// tylko to nie zwraca takiej ładnej listy, jak napisałeś, tam są wszystkie dane, ale emaila nie ma
-			// wyżej masz wyświetlanie wszystkich wiadomości, to może wymyślisz, co z tym zrobić
-			// })
-			function getOldMsgs(number, lastNumber) {
-				return { number: number, list: [{ value: "old msg", email: "sender's email" }] }
-			};
-			oldMsgs = getOldMsgs(number, lastNumber);
-			socket.emit("old msgs", oldMsgs);
-		});
+		// socket.on("old msgs", function (data) {
+		// 	var number = data.number;
+		// 	var lastNumber = data.lastNumber;
+		// 	// db.showRoomMessagesXtoY(socket.room, lastNumber, number, oldMsgs => {
+		// 	// tylko to nie zwraca takiej ładnej listy, jak napisałeś, tam są wszystkie dane, ale emaila nie ma
+		// 	// wyżej masz wyświetlanie wszystkich wiadomości, to może wymyślisz, co z tym zrobić
+		// 	// })
+		// 	function getOldMsgs(number, lastNumber) {
+		// 		return { number: number, list: [{ value: "old msg", email: "sender's email" }] }
+		// 	};
+		// 	oldMsgs = getOldMsgs(number, lastNumber);
+		// 	socket.emit("old msgs", oldMsgs);
+		// });
 	}
 	else {
 		socket.emit('diag', 'notLogged');

@@ -106,13 +106,30 @@
             });
 
             //Wysyłanie wiadomości:
+            function sendMsg(txtmessage){
+                if(txtmessage.value != ""){
+                    for (let index = 0; index < txtmessage.value.length - 500; index+=0) {
+	                    var msg_part = txtmessage.value.substring(0,500);	
+                        txtmessage.value = txtmessage.value.substring(500,txtmessage.value.length);	
+                        socket.emit('chat message', {value: msg_part, email: '<%= email %>'});
+                    }
+                    socket.emit('chat message', {value: txtmessage.value.substring(0,1000), email: '<%= email %>'});
+                    txtmessage.value = "";
+                }
+            };
+
             var btsend = document.getElementById('btsend');
             btsend.addEventListener('click', function () {
                 var txtmessage = document.getElementById('txtmessage');
-                socket.emit('chat message', {value: txtmessage.value, email: '<%= email %>'});
-                txtmessage.value = "";
+                sendMsg(txtmessage);
             });
-
+            var txtsend = document.getElementById('txtmessage');
+            txtsend.addEventListener('keypress', function (e) {
+                var key = e.which || e.keyCode;
+                if (key === 13) { // 13 is enter
+                    sendMsg(txtsend);
+                }
+            });
         });
     </script>
 </head>

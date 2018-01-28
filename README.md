@@ -14,7 +14,6 @@ Projrekt na WEPPO
     - [x] Autoprzewijanie;
     - [x] inny kolor wiadoomości od kogoś
 - [x] Ekran Logowania;
-- [ ] Nie tworzyć socketa jeżeli user jest nie zalogowany;
 - [ ] Dodać przycisk "nowa wiadomość"
     - [ ] Podpowiadanie użytkowników z BD (niekoniecznie znajomych)
 - [ ] Wiadomości do wielu osób
