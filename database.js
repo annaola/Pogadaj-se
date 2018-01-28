@@ -430,6 +430,17 @@ lastUsedUpdate = function (room, date) {
         })
 }
 
+//może wyświetlać nie ostatnio używane, a początkowo używane => zmienić na DESC
+showLastActiveRooms = function (user, number, f) {
+    Room.findAll({
+        where: {
+            member: user
+        },
+        order: [["lastUsed", "ASC"]], //DESC??
+        limit: number
+    }).then(rooms => { f(rooms) })
+}
+
 module.exports = {
     createUser: createUser,
     showAllUsers: showAllUsers,
