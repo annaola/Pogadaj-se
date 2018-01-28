@@ -66,7 +66,7 @@
             socket.on('friend list', function (list) {
                 var fList = document.getElementById('friendBox');
                 var fListMenu = document.getElementById('FriendsOnMenu');
-                if(list.lenght){
+                if (list.length > 0){
                     fList.innerHTML += "<h1>Friends:</h1>";
 
                     for (const friend in list) {

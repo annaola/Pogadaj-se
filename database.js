@@ -131,7 +131,7 @@ showAllRelations = function () {
     })
 }
 
-addFriend = function (user, friend, f) {
+addFriend = function (type, user, friend, f) {
     var relation = Relation.findOne({
         where: {
             [Sequelize.Op.or]: [
@@ -148,40 +148,91 @@ addFriend = function (user, friend, f) {
     }).then(relation => {
         // console.log(relation);
         if (relation) {
-            // if (type == 2) { 
-
-            // }
-            if (relation.status == 0) {
-                if (relation.action_user_id == friend) {
-                    Relation.update({
-                        status: 1
-                    }, {
-                            where: {
-                                [Sequelize.Op.or]: [
-                                    {
-                                        first_user_id: relation.first_user_id,
-                                        second_user_id: relation.second_user_id
-                                    },
-                                    {
-                                        first_user_id: relation.second_user_id,
-                                        second_user_id: relation.first_user_id
-                                    }
-                                ]
-
-                            }
-                        }).then(rel => {
-                            f(3);
-                            print("Zostaliście znajomymi");
-                        });
-                }
-                else {
-                    f(1);
-                    print("Już wysłano zaproszenie");
-                }
+            if (type == 2) {
+                Relation.update({
+                    status: 2,
+                    action_user_id: user
+                }, {
+                        where: {
+                            [Sequelize.Op.or]: [
+                                {
+                                    first_user_id: relation.first_user_id,
+                                    second_user_id: relation.second_user_id
+                                },
+                                {
+                                    first_user_id: relation.second_user_id,
+                                    second_user_id: relation.first_user_id
+                                }
+                            ]
+                        }
+                    }).then(rel => {
+                        f(4);
+                        print("Odrzucenie zaproszenia")
+                    })
             }
             else {
-                f(2);
-                print("Już jesteście znajomymi");
+                if (relation.status == 0) {
+                    if (relation.action_user_id == friend) {
+                        Relation.update({
+                            status: 1,
+                            action_user_id: user
+                        }, {
+                                where: {
+                                    [Sequelize.Op.or]: [
+                                        {
+                                            first_user_id: relation.first_user_id,
+                                            second_user_id: relation.second_user_id
+                                        },
+                                        {
+                                            first_user_id: relation.second_user_id,
+                                            second_user_id: relation.first_user_id
+                                        }
+                                    ]
+                                }
+                            }).then(rel => {
+                                f(3);
+                                print("Zostaliście znajomymi");
+                            });
+                    }
+                    else {
+                        f(1);
+                        print("Już wysłano zaproszenie");
+                    }
+                }
+                else {
+                    if (relation.status == 2) {
+                        if (relation.action_user_id == user) {
+                            Relation.update({
+                                status: 1,
+                                action_user_id: user
+                            }, {
+                                    where: {
+                                        [Sequelize.Op.or]: [
+                                            {
+                                                first_user_id: relation.first_user_id,
+                                                second_user_id: relation.second_user_id
+                                            },
+                                            {
+                                                first_user_id: relation.second_user_id,
+                                                second_user_id: relation.first_user_id
+                                            }
+                                        ]
+                                    }
+                                }).then(rel => {
+                                    f(3);
+                                    print("Zostaliście znajomymi");
+                                });
+                        }
+                        else {
+                            f(5);
+                            print("Twoje zaproszenie jest odrzucone");
+                        }
+                    }
+                    else {
+                        f(2);
+                        print("Już jesteście znajomymi");
+                    }
+                }
             }
         }
         else {
@@ -195,6 +246,32 @@ addFriend = function (user, friend, f) {
                 print("Wysłano zaproszenie");
             })
         }
+    })
+}
+
+listFriendsRequest = function (id, f) {
+    var relations = Relation.findAll({
+        where: {
+            [Sequelize.Op.or]: [
+                { first_user_id: id },
+                { second_user_id: id },
+            ],
+            status: 0,
+            [Sequelize.Op.not]: [
+                { action_user_id: id }
+            ]
+        }
+    }).then(relations => {
+        var friendsIds = [];
+        relations.forEach(rel => {
+            if (rel.first_user_id == id) friendsIds.push(rel.second_user_id);
+            else friendsIds.push(rel.first_user_id);
+        });
+        User.findAll({
+            where: {
+                id: friendsIds
+            }
+        }).then(users => { f(users) })
     })
 }
 
@@ -267,6 +344,17 @@ showRoomMessages = function (room, f) {
     }).then(messages => { f(messages) })
 }
 
+showRoomMessagesXtoY = function (room, x, y, f) {
+    Message.findAll({
+        where: {
+            room: room
+        },
+        order: [["createdAt", "ASC"]],
+        offset: x,
+        limit: y - x
+    }).then(messages => { f(messages) })
+}
+
 const Room = sequelize.define('room', {
     id: {
         type: Sequelize.UUID,
@@ -304,9 +392,13 @@ createRoom = function (user, members) {
         }).then(membersMails => {
             var mails = [];
             membersMails.forEach(mem => {
-                mails.push(membersMails.mail);
-            })
-            name = utils.makeRoomName([userMail.mail].concat(mails.sort()));
+                mails.push(mem.mail);
+            });
+            list = mails.sort();
+            var name = '';
+            for (const l in list) {
+                name += l.toString();
+            }
             Room.create({
                 name: name,
                 member: user
@@ -349,10 +441,12 @@ module.exports = {
     showAllRelations: showAllRelations,
     addFriend: addFriend,
     listFriends: listFriends,
+    listFriendsRequest: listFriendsRequest,
 
     showAllMessages: showAllMessages,
     createMessage: createMessage,
     showRoomMessages: showRoomMessages,
+    showRoomMessagesXtoY: showRoomMessagesXtoY,
 
     showAllRooms: showAllRooms,
     createRoom: createRoom,
