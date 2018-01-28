@@ -16,7 +16,9 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
 
     <script>
-        
+        function htmlEntities(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
         var socket = io();
         //Funkcja do roobienia nazw pokojów, na razie naiwna
         function makeRoomName(userList) {
@@ -95,12 +97,11 @@
             //wyświetlanie wiadomości:
             socket.on('chat message', function (data) {
                 var msg = document.getElementById('messages');
-                // console.log(data, data.email, data.value)
                 if(data.email == '<%= email %>'){
-                    msg.innerHTML += '<p class="incmsg">' + data.value + '</p>';
+                    msg.innerHTML += '<p class="incmsg">' + htmlEntities(data.value) + '</p>';
                 }
                 else{
-                    msg.innerHTML += '<p class="foreign_incmsg">' + data.value + '</p>';
+                    msg.innerHTML += '<p class="foreign_incmsg">' + htmlEntities(data.value) + '</p>';
                 }
                 msg.scrollTop = msg.scrollHeight;
             });
@@ -111,9 +112,9 @@
                     for (let index = 0; index < txtmessage.value.length - 500; index+=0) {
 	                    var msg_part = txtmessage.value.substring(0,500);	
                         txtmessage.value = txtmessage.value.substring(500,txtmessage.value.length);	
-                        socket.emit('chat message', {value: msg_part, email: '<%= email %>'});
+                        socket.emit('chat message', {value: htmlEntities(msg_part), email: '<%= email %>'});
                     }
-                    socket.emit('chat message', {value: txtmessage.value.substring(0,1000), email: '<%= email %>'});
+                    socket.emit('chat message', {value: htmlEntities(txtmessage.value.substring(0,1000)), email: '<%= email %>'});
                     txtmessage.value = "";
                 }
             };
