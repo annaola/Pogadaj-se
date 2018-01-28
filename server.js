@@ -102,9 +102,9 @@ app.post('/register', function (req, res) {
 app.post('/addFriend', (req, res) => {
 	sess = req.session;
 	friendEmail = req.body.friendEmail;
-	var type = req.body.type; //typ; 1:zatwierdzono, 2: odrzucono (zaproszenie)
+	//var type = req.body.type; //typ; 1:zatwierdzono, 2: odrzucono (zaproszenie)
 	var userId = sess.userId;
-	
+
 	db.findUserByEmail(friendEmail, friendData => {
 		//print("user: " + userId);
 		var friendId = friendData.id;
@@ -132,11 +132,13 @@ app.post('/addFriend', (req, res) => {
 app.get('/main', (req, res) => {
 	sess = req.session;
 	if (sess.isValid) {
-		friendRequestsList = [{id: 0, email: "example@example.op", name: "Jan Pancerz VII"}, //
-								{id: 1, email: "michal.mar3@gmailc.om", name: "1stain"}]
-		model = { email: sess.email,
-				  userId: sess.userId, 
-				  friendRequestsList: friendRequestsList }
+		friendRequestsList = [{ id: 0, email: "example@example.op", name: "Jan Pancerz VII" }, //
+		{ id: 1, email: "michal.mar3@gmailc.om", name: "1stain" }]
+		model = {
+			email: sess.email,
+			userId: sess.userId,
+			friendRequestsList: friendRequestsList
+		}
 		res.render('main', model);
 	}
 	else {
@@ -193,9 +195,9 @@ io.on('connection', function (socket) {
 
 		socket.on('friend list', function (data) {
 			db.listFriends(sess.userId, friendsList => {
-			socket.emit('friend list', friendsList);
+				socket.emit('friend list', friendsList);
+				socket.emit('chat message', { value: socket.id, email: sess.email });//diagnostic
 			})
-			socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
 		});
 
 		socket.on('diag', function (data) {
@@ -236,11 +238,11 @@ io.on('connection', function (socket) {
 				socket.emit('user list', emails);
 			});
 		});
-		socket.on("old msgs", function (data){
+		socket.on("old msgs", function (data) {
 			var number = data.number;
 			var lastNumber = data.lastNumber;
-			function getOldMsgs(number, lastNumber){
-				return {number: number, list:[{ value: "old msg", email: "sender's email" }]}
+			function getOldMsgs(number, lastNumber) {
+				return { number: number, list: [{ value: "old msg", email: "sender's email" }] }
 			};
 			oldMsgs = getOldMsgs(number, lastNumber);
 			socket.emit("old msgs", oldMsgs);

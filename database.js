@@ -148,6 +148,9 @@ addFriend = function (user, friend, f) {
     }).then(relation => {
         // console.log(relation);
         if (relation) {
+            // if (type == 2) { 
+
+            // }
             if (relation.status == 0) {
                 if (relation.action_user_id == friend) {
                     Relation.update({
