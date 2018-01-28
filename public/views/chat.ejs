@@ -16,13 +16,36 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
 
     <script>
+        emailList = []
+        function validateEmail(email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
         function htmlEntities(str) {
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
+        function addMail(){
+            emailLine = document.getElementById("dvEmailLine");
+            p = "";
+            if(document.getElementsByClassName("emailList").length > 0 ){
+                p=", "
+            };
+            friendEmail = document.getElementById("friendEmail")
+            email = friendEmail.value
+            
+            if(validateEmail(email) && emailList.indexOf(email)==-1){
+                emailLine.innerHTML += `${p}<div class="emailList"> ${friendEmail.value} </div>`
+                emailList.push(email);
+            }
+            friendEmail.value='';
+        }
         var socket = io();
         //Funkcja do roobienia nazw pokojów, na razie naiwna
-        function makeRoomName(userList) {
-            sList = userList.sort();//.map(l => l.id).sort();
+        function makeRoomName(mailList) {
+            sList = mailList.sort();//.map(l => l.id).sort();
+            var sList = sList.filter(function(elem, index, self) {
+                    return index === self.indexOf(elem);
+            })
             name = ''
             for (const user in sList) {
                 name += sList[user].toString();
@@ -97,9 +120,6 @@
             //wyświetlanie wiadomości:
             socket.on('chat message', function (data) {
                 var msg = document.getElementById('messages');
-                // console.log(data, data.email, data.value)
-                var text = document.createTextNode('<p>Stuff</p>');
-                console.log(text)
                 if(data.email == '<%= email %>'){
                     msg.innerHTML += '<p class="incmsg">' + htmlEntities(data.value) + '</p>';
                 }
@@ -134,7 +154,17 @@
                     sendMsg(txtsend);
                 }
             });
+            document.getElementById("submitNewMsg").addEventListener("click", function() {
+                chooseRoom('<%= email %>', emailList);
+                emailList = [];
+                document.getElementById("dvEmailLine").innerHTML="";
+            });
+            document.getElementById("resetNewMsg").addEventListener("click", function() {
+                emailList = [];
+                document.getElementById("dvEmailLine").innerHTML="";
+            });
         });
+        
     </script>
 </head>
 
@@ -174,30 +204,9 @@
                         </div>
                     </li>
                 </ul>
+                <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#newMsgModal">Nowa wiadomość</button>
             </div>
         </nav>
-        <!-- <div class="collapse" id="Button">
-            <div class="navbar-light bg-light p-4">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/main">Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/main">Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/main">Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <br/> -->
 
         <div id="friendBox">
             
@@ -223,7 +232,35 @@
         </div>
 
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="newMsgModal" tabindex="-1" role="dialog" aria-labelledby="newMsgModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="title">Nowa wiadomość</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
 
+            <div class="modal-body">
+            <label for="friendEmail">Podaj email znajomego:</label><br>
+            <input type="email" id=friendEmail name="friendEmail" placeholder="Email" list="emailList" autofocus>
+            <button type="button" class="btn btn-info btn-sm" onclick="addMail();" id="btAddEmail">+</button>
+            <datalist id="emailList">
+            <select id="emailSelect">
+            </select>
+            </datalist>
+            <div id="dvEmailLine"></div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+            <button type="reset" class="btn btn-warning" id="resetNewMsg">Wyczyść</button>
+            <button type="button" class="btn btn-primary" id="submitNewMsg"  data-dismiss="modal">Utwórz</button>
+        </div>
+        </div>
+    </div>
+    </div>
 </body>
 
 </html>
