@@ -293,7 +293,8 @@ listFriends = function (id, f) {
         User.findAll({
             where: {
                 id: friendsIds
-            }
+            },
+            order: [["name", "ASC"]]
         }).then(users => { f(users) })
     })
 }
