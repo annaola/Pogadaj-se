@@ -104,12 +104,12 @@ app.post('/addFriend', (req, res) => {
 	friendEmail = req.body.friendEmail;
 	var type = req.body.type; //typ; 1:zatwierdzono, 2: odrzucono (zaproszenie)
 	var userId = sess.userId;
-	
+
 	db.findUserByEmail(friendEmail, friendData => {
 		//print("user: " + userId);
 		var friendId = friendData.id;
 		//print("friend: " + friendId);
-		db.addFriend(userId, friendId, data => {
+		db.addFriend(type, userId, friendId, data => {
 			switch (data) {
 				case (0):
 					res.redirect('/main'); // TODO: wysłano zaproszenie						
@@ -121,7 +121,14 @@ app.post('/addFriend', (req, res) => {
 					res.redirect('/main'); // TODO: już jesteście znajomymi
 					break;
 				case (3):
+					db.createRoom(userId, [friendId]);
 					res.redirect('/main'); // TODO: Zostaliście znajomymi			
+					break;
+				case (4):
+					res.redirect('/main'); // TODO: odrzucenie zaproszenia
+					break;
+				case (5):
+					res.redirect('/main'); // TODO: Twoje zaproszenie jest odrzucone
 					break;
 			}
 		})
@@ -131,12 +138,14 @@ app.post('/addFriend', (req, res) => {
 app.get('/main', (req, res) => {
 	sess = req.session;
 	if (sess.isValid) {
-		friendRequestsList = [{id: 0, email: "example@example.op", name: "Jan Pancerz VII"}, //
-								{id: 1, email: "michal.mar3@gmailc.om", name: "1stain"}]
-		model = { email: sess.email,
-				  userId: sess.userId, 
-				  friendRequestsList: friendRequestsList }
-		res.render('main', model);
+		db.listFriendsRequest(sess.userId, requests => {
+			model = {
+				email: sess.email,
+				userId: sess.userId,
+				friendRequestsList: requests
+			}
+			res.render('main', model);
+		})
 	}
 	else {
 		res.render('pleaseLogin');
@@ -192,9 +201,10 @@ io.on('connection', function (socket) {
 
 		socket.on('friend list', function (data) {
 			db.listFriends(sess.userId, friendsList => {
-			socket.emit('friend list', friendsList);
+				print(friendsList);
+				socket.emit('friend list', friendsList);
+				socket.emit('chat message', { value: socket.id, email: sess.email });//diagnostic
 			})
-			socket.emit('chat message', {value: socket.id, email: sess.email});//diagnostic
 		});
 
 		socket.on('diag', function (data) {
@@ -211,9 +221,21 @@ io.on('connection', function (socket) {
 			socket.join(room);
 			socket.room = room;
 			socket.emit('chat message', { value: "joined " + room, email: sess.email });//diagnostic
+			db.showRoomMessages(room, messages => {
+				messages.forEach(element => {
+					db.findUserById(element.author, user => {
+						socket.emit('chat message', {
+							value: element.value,
+							email: user.email
+						})
+					})
+				});
+			})
 		});
 
 		socket.on('chat message', function (data) {
+			db.createMessage(socket.room, sess.userId, data.value);
+			db.lastUsedUpdate(socket.room, new Date());
 			io.to(socket.room).emit('chat message', data);
 			// socket.rooms
 		});
@@ -223,11 +245,15 @@ io.on('connection', function (socket) {
 				socket.emit('user list', emails);
 			});
 		});
-		socket.on("old msgs", function (data){
+		socket.on("old msgs", function (data) {
 			var number = data.number;
 			var lastNumber = data.lastNumber;
-			function getOldMsgs(number, lastNumber){
-				return {number: number, list:[{ value: "old msg", email: "sender's email" }]}
+			// db.showRoomMessagesXtoY(socket.room, lastNumber, number, oldMsgs => {
+			// tylko to nie zwraca takiej ładnej listy, jak napisałeś, tam są wszystkie dane, ale emaila nie ma
+			// wyżej masz wyświetlanie wszystkich wiadomości, to może wymyślisz, co z tym zrobić
+			// })
+			function getOldMsgs(number, lastNumber) {
+				return { number: number, list: [{ value: "old msg", email: "sender's email" }] }
 			};
 			oldMsgs = getOldMsgs(number, lastNumber);
 			socket.emit("old msgs", oldMsgs);

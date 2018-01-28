@@ -29,11 +29,11 @@ module.exports = {
         }
         return friends;
     },
-    makeRoomName: function (userList){
-        sList=userList.map(l => l.id).sort();
-        name=''
+    makeRoomName: function (userList) {
+        sList = userList.sort();
+        var name = '';
         for (const user in sList) {
-            name+=sList[user].toString();
+            name += sList[user].toString();
         }
         return name;
     }
