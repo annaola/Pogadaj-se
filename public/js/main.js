@@ -1,7 +1,7 @@
 function sendAnswer(friendEmail, type, boxId){
     $.post("/addFriend",        
     {
-        userId: '<%= userId %>', //TODO prawdopodobnie do usunięcia
+        userId: userId, //TODO prawdopodobnie do usunięcia
         friendEmail: friendEmail,
         type: type
     });

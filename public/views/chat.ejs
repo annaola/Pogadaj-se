@@ -14,13 +14,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <script>
+        userEmail = '<%= email %>'
+    </script>
     <script src="js/chat.js"></script>
 </head>
 
 <body>
     <div id="inBody">
         <!-- pasek nawigacyjny -->
-        <nav class="navbar navbar-expand-sm navbar-light bg-success">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
             <!-- Tytuł paska nawigacyjnego -->
             <a class="navbar-brand" href="/">
                 <img src="http://icons.iconarchive.com/icons/froyoshark/enkel/512/iMessage-icon.png" width="30" height="30" class="d-inline-block align-top"
@@ -46,7 +49,7 @@
                         <a class="nav-link" href="/logout">Wyloguj</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown03" data-toggle="dropdown" aria-haspopup="true"
+                        <a class="nav-link dropdown-toggle"  id="dropdown" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">Znajomi</a>
                         <div class="dropdown-menu" aria - labelledby="Friends" id="FriendsOnMenu">
 

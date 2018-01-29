@@ -82,11 +82,11 @@ window.addEventListener('load', function () {
                 var box1 = `<div 
                                 class="dvFriends"
                                 id="fr${list[friend].id}" 
-                                onclick="chooseRoom('<%= email %>',['${list[friend].email}']);" 
+                                onclick="chooseRoom('${userEmail}',['${list[friend].email}']);" 
                                 style="cursor: pointer;">${list[friend].name}</div>`
 
                 var box2 = `<a  class="dropdown-item"
-                                onclick="chooseRoom('<%= email %>',['${list[friend].email}']);"
+                                onclick="chooseRoom('${userEmail}',['${list[friend].email}']);"
                                 style="cursor: pointer;"
                                 id="fr${list[friend].id}">
                                     ${list[friend].name}
@@ -102,7 +102,7 @@ window.addEventListener('load', function () {
     //wyświetlanie wiadomości:
     socket.on('chat message', function (data) {
         var msg = document.getElementById('messages');
-        if(data.email == '<%= email %>'){
+        if(data.email == userEmail){
             msg.innerHTML += '<p class="incmsg">' + htmlEntities(data.value) + '</p>';
         }
         else{
@@ -117,9 +117,9 @@ window.addEventListener('load', function () {
             for (let index = 0; index < txtmessage.value.length - 500; index+=0) {
                 var msg_part = txtmessage.value.substring(0,500);	
                 txtmessage.value = txtmessage.value.substring(500,txtmessage.value.length);	
-                socket.emit('chat message', {value: msg_part, email: '<%= email %>'});
+                socket.emit('chat message', {value: msg_part, email: userEmail});
             }
-            socket.emit('chat message', {value: txtmessage.value.substring(0,1000), email: '<%= email %>'});
+            socket.emit('chat message', {value: txtmessage.value.substring(0,1000), email: userEmail});
             txtmessage.value = "";
         }
     };
@@ -137,7 +137,7 @@ window.addEventListener('load', function () {
         }
     });
     document.getElementById("submitNewMsg").addEventListener("click", function() {
-        chooseRoom('<%= email %>', emailList);
+        chooseRoom(userEmail, emailList);
         emailList = [];
         document.getElementById("dvEmailLine").innerHTML="";
     });
