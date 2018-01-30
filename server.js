@@ -212,7 +212,8 @@ io.on('connection', function (socket) {
 				socketList.splice(socketList.indexOf(socket), 1); //na wyjściu usuwam kanał z listy aktywnych
 			}
 		})
-		socket.on('room', function (room) {
+		socket.on('room', function (data) {
+			room = utils.makeRoomName(sess.email, data);
 			print(room);
 			print(socket.room);
 			if (socket.room) {

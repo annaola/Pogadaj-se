@@ -22,29 +22,15 @@ function addMail(){
     friendEmail.value='';
 }
 var socket = io();
-//Funkcja do roobienia nazw pokojów, na razie naiwna
-function makeRoomName(mailList) {
-    sList = mailList.sort();//.map(l => l.id).sort();
-    var sList = sList.filter(function(elem, index, self) {
-            return index === self.indexOf(elem);
-    })
-    name = ''
-    for (const user in sList) {
-        name += sList[user].toString();
-    }
-    return name;
-}
+
 //funckja do wybierania konkretnego pokoju
-function chooseRoom(homeEmail, mailList) {
-    // alert("działa")
-    if (mailList == []) {
-        alert("Nie możesz (jeszcze) pisać do samego siebie")
-    } else {
-        room = makeRoomName([homeEmail].concat(mailList));
-        msg = document.getElementById("messages");
-        msg.innerHTML = "";
-        socket.emit('room', room);
-    } ;
+function chooseRoom(mailList) {
+
+    // room = makeRoomName([homeEmail].concat(mailList));
+    msg = document.getElementById("messages");
+    msg.innerHTML = "";
+    socket.emit('room', mailList);
+
 }
 socket.on('diag', function (data) {
     if (data = "notLogged") {
@@ -82,11 +68,11 @@ window.addEventListener('load', function () {
                 var box1 = `<div 
                                 class="dvFriends"
                                 id="fr${list[friend].id}" 
-                                onclick="chooseRoom('${userEmail}',['${list[friend].email}']);" 
+                                onclick="chooseRoom(['${list[friend].email}']);" 
                                 style="cursor: pointer;">${list[friend].name}</div>`
 
                 var box2 = `<a  class="dropdown-item"
-                                onclick="chooseRoom('${userEmail}',['${list[friend].email}']);"
+                                onclick="chooseRoom(['${list[friend].email}']);"
                                 style="cursor: pointer;"
                                 id="fr${list[friend].id}">
                                     ${list[friend].name}
@@ -144,5 +130,22 @@ window.addEventListener('load', function () {
     document.getElementById("resetNewMsg").addEventListener("click", function() {
         emailList = [];
         document.getElementById("dvEmailLine").innerHTML="";
+    });
+    addFriendEmail = document.getElementById('friendEmail');
+    addFriendEmail.addEventListener('input', function(){
+        // alert(addFriendEmail.value);
+        socket.emit('user list', addFriendEmail.value);
+    });
+
+    socket.on('user list', function (data) {
+        var list = document.getElementById('emailSelect');
+        // console.log(data, data.email, data.value)
+        options = ""
+        for( i in data){
+            options +=`<option>${data[i].email}\n`;
+            // console.log(data[i])
+        }
+        list.innerHTML = options;
+
     });
 });
