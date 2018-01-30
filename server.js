@@ -213,9 +213,9 @@ io.on('connection', function (socket) {
 			}
 		})
 		socket.on('room', function (data) {
+
 			room = utils.makeRoomName(sess.email, data);
-			print(room);
-			print(socket.room);
+			
 			if (socket.room) {
 				socket.leave(socket.room);
 			}
