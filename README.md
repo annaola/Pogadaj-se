@@ -10,13 +10,13 @@ Projrekt na WEPPO
 
 - [x] Tworzenie/dołączanie do pokojów ( id pokoju: concat(sort(idU1, idU2, ..);
 - [ ] Dodanie wielowątkowości wiadomości;
-- [ ] CSS:
+- [x] CSS:
     - [x] Autoprzewijanie;
     - [x] inny kolor wiadoomości od kogoś
 - [x] Ekran Logowania;
-- [ ] Dodać przycisk "nowa wiadomość"
+- [x] Dodać przycisk "nowa wiadomość"
     - [ ] Podpowiadanie użytkowników z BD (niekoniecznie znajomych)
-- [ ] Wiadomości do wielu osób
+- [x] Wiadomości do wielu osób
 
 
 
