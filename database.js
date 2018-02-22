@@ -356,6 +356,19 @@ showRoomMessagesXtoY = function (room, x, y, f) {
     }).then(messages => { f(messages) })
 }
 
+showRoomMessagesXtoY2 = async function (room, x, y) {
+    var messages = await Message.findAll({
+        where: {
+            room: room
+        },
+        order: [["createdAt", "ASC"]],
+        offset: x,
+        limit: y - x
+    });
+    
+    return messages;
+}
+
 const Room = sequelize.define('room', {
     id: {
         type: Sequelize.UUID,
